@@ -4,6 +4,7 @@
 # ignore executables
 a.out
 ft_containers
+main
 
 # ignore dSYM folders
 *.dSYM/*
