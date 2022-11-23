@@ -1,0 +1,12 @@
+# ignore .vscode setting folder
+.vscode
+
+# ignore executables
+a.out
+ft_containers
+
+# ignore dSYM folders
+*.dSYM/*
+
+# ignore object files
+*.o
