@@ -20,6 +20,7 @@ namespace ft
 	};
 
 	// Integral constant -> This template is designed to provide compile-time constants as types.
+	// reference -> https://www.cs.auckland.ac.nz/references/unix/digital/AQTLTBTE/DOCU_032.HTM
 
 	template <class T, T v>
 	struct integral_constant
