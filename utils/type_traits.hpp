@@ -12,7 +12,7 @@ struct enable_if {};
 // add specialization for true case !
 template <class T>
 struct enable_if<true, T> {
-        typedef T type;
+    typedef T type;
 };
 
 // Integral constant -> This template is designed to provide compile-time constants as types.
@@ -20,10 +20,10 @@ struct enable_if<true, T> {
 
 template <class T, T v>
 struct integral_constant {
-        static const T                  value = v;
-        typedef T                       value_type;
-        typedef integral_constant<T, v> type;
-                                        operator value_type() { return value; }
+    static const T                  value = v;
+    typedef T                       value_type;
+    typedef integral_constant<T, v> type;
+                                    operator value_type() { return value; }
 };
 
 typedef integral_constant<bool, true>  true_type;
