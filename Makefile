@@ -4,7 +4,7 @@ CC=c++
 
 CFLAGS = -Wall -Werror -Wextra -g
 
-HEADERS = utils/pair.hpp  utils/type_traits.hpp
+HEADERS = utils/pair.hpp  utils/type_traits.hpp utils/iterator_traits.hpp
 INCLUDES = -I utils
 
 SRC_FILES = ft_container.cpp
