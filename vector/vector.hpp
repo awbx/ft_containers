@@ -143,6 +143,18 @@ class vector {
 
     // -------------------------------- Element access functions ------------------------------
 
+    reference       operator[](size_type n) { return this->arr[n]; }
+    const_reference operator[](size_type n) const { return this->arr[n]; }
+
+    reference at(size_type n) {
+        if (n >= this->size()) throw std::out_of_range("vector");
+        return this->arr[n];
+    }
+    const_reference at(size_type n) const {
+        if (n >= this->size()) throw std::out_of_range("vector");
+        return this->arr[n];
+    }
+
     reference       front() { return this->arr[0]; }
     const_reference front() const { return this->arr[0]; }
 
