@@ -21,8 +21,20 @@ typename ft::iterator_traits<InputIterator>::difference_type distance(InputItera
     return diff;
 }
 
+template <class InputIterator>
+typename ft::iterator_traits<InputIterator>::difference_type distance(InputIterator first, InputIterator last, std::input_iterator_tag) {
+    typename ft::iterator_traits<InputIterator>::difference_type diff(0);
+    for (; first != last; ++first) ++diff;
+    return diff;
+}
+
 template <class _RandIter>
 typename ft::iterator_traits<_RandIter>::difference_type distance(_RandIter first, _RandIter last, ft::random_access_iterator_tag) {
+    return last - first;
+}
+
+template <class _RandIter>
+typename ft::iterator_traits<_RandIter>::difference_type distance(_RandIter first, _RandIter last, std::random_access_iterator_tag) {
     return last - first;
 }
 
