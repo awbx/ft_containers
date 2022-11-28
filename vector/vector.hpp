@@ -79,7 +79,8 @@ class vector {
         std::memcpy(this->arr, x.arr, this->size() * sizeof(value_type));
     }
 
-    // capacity functions
+    // -------------------------------- Capacity functions -----------------------------
+
     size_type capacity() const { return this->cap; }
     size_type size() const { return this->_size; }
     size_type max_size() const { return this->alloc.max_size(); }
@@ -87,13 +88,13 @@ class vector {
 
     // Todo : make this function private !
 
-    void extend(size_type new_cap) {
+    void extend(size_type new_cap, bool do_copy = true) {
         size_type tmp_cap = this->capacity();
         pointer   tmp_arr = this->arr;
 
         this->cap = new_cap;
         this->arr = this->alloc.allocate(this->capacity());
-        std::memcpy(this->arr, tmp_arr, this->size() * sizeof(value_type));
+        if (do_copy) std::memcpy(this->arr, tmp_arr, this->size() * sizeof(value_type));
         for (size_type idx = 0; idx < this->size(); idx++) this->alloc.destroy(tmp_arr + idx);
         this->alloc.deallocate(tmp_arr, tmp_cap);
     }
@@ -122,6 +123,57 @@ class vector {
 
         if (n > this->capacity()) this->extend(n);
     }
+
+    // -------------------------------- End of capacity functions -----------------------------
+
+    // -------------------------------- Modifiers function -----------------------------------
+
+    template <class InputIterator>
+    void assign(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
+        difference_type diff = ft::distance(first, last);
+        if (diff < 0 || (size_type)diff > this->max_size()) throw std::length_error("vector");
+
+        bool do_construct = false;
+        if ((size_type)diff > this->capacity()) {
+            this->extend(diff, false);
+            do_construct = true;
+            this->_size = 0;
+        }
+        size_type idx = 0;
+        for (; idx < (size_type)diff && first != last; idx++, first++) {
+            if (do_construct)
+                this->alloc.construct(this->arr + idx, *first);
+            else
+                this->arr[idx] = *first;
+        }
+        for (; idx < this->size(); idx++) this->alloc.destroy(this->arr + idx);
+        this->_size = diff;
+    }
+
+    void assign(size_type n, const value_type& val) {
+        if (n > this->max_size()) throw std::length_error("vector");
+
+        bool do_construct = false;
+
+        if (n > this->capacity()) {
+            this->extend(n, false);
+            do_construct = true;
+            this->_size = 0;
+        }
+
+        size_type idx = 0;
+        for (; idx < n; idx++) {
+            if (do_construct)
+                this->alloc.construct(this->arr + idx, val);
+            else
+                this->arr[idx] = val;
+        }
+        for (; idx < this->size(); idx++) this->alloc.destroy(this->arr + idx);
+
+        this->_size = n;
+    }
+
+    // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
     allocator_type get_allocator() const { return this->alloc; }
