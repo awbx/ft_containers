@@ -173,6 +173,14 @@ class vector {
         this->_size = n;
     }
 
+    void push_back(const value_type& val) {
+        if (!this->capacity()) 
+			this->reserve(1);
+
+        if (this->size() == this->capacity()) this->extend(this->capacity() * 2);
+
+		this->alloc.construct(this->arr + this->_size++, val);
+    }
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
