@@ -141,6 +141,16 @@ class vector {
 
     // -------------------------------- End of capacity functions -----------------------------
 
+    // -------------------------------- Element access functions ------------------------------
+
+    reference       front() { return this->arr[0]; }
+    const_reference front() const { return this->arr[0]; }
+
+    reference       back() { return this->arr[this->size() - 1]; }
+    const_reference back() const { return this->arr[this->size() - 1]; }
+
+    // -------------------------------- End of element access functions -----------------------
+
     // -------------------------------- Modifiers function -----------------------------------
 
     template <class InputIterator>
