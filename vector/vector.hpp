@@ -174,13 +174,15 @@ class vector {
     }
 
     void push_back(const value_type& val) {
-        if (!this->capacity()) 
-			this->reserve(1);
+        if (!this->capacity()) this->reserve(1);
 
         if (this->size() == this->capacity()) this->extend(this->capacity() * 2);
 
-		this->alloc.construct(this->arr + this->_size++, val);
+        this->alloc.construct(this->arr + this->_size++, val);
     }
+
+    void pop_back() { this->alloc.destroy(this->arr + this->_size--); }  // CHECK : does linux implementation throw an error in case of empty vector!
+
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
