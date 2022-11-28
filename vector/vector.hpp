@@ -68,6 +68,15 @@ class vector {
         }
     }
 
+    // copy constructor
+    vector(const vector& x) {
+        this->init(x.size(), x.size(), x.get_allocator());
+        this->arr = this->alloc.allocate(this->capacity());
+
+        // copy `arr` of x to `this->arr`
+        std::memcpy(this->arr, x.arr, this->size() * sizeof(value_type));
+    }
+
     // capacity functions
     size_type capacity() const { return this->cap; }
     size_type size() const { return this->_size; }
