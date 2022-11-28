@@ -45,6 +45,8 @@ class vector {
         this->arr = nullptr;
     }
     explicit vector(size_type n, const value_type& val = value_type(), const allocator_type& alloc = allocator_type()) {
+        if (n > this->max_size()) throw std::length_error("vector");
+
         this->init(n, 0, alloc);
         this->arr = this->alloc.allocate(n);
         for (size_type i = 0; i < n; i++, this->_size++) {
@@ -56,7 +58,7 @@ class vector {
     vector(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const allocator_type& alloc = allocator_type()) {
         difference_type diff = ft::distance(first, last);
 
-        if (diff < 0) throw std::length_error("vector");
+        if (diff < 0 || (size_type)diff > this->max_size()) throw std::length_error("vector");
 
         this->init(diff, diff, alloc);
         this->arr = this->alloc.allocate(diff);
