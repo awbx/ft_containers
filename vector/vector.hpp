@@ -117,6 +117,12 @@ class vector {
         this->_size = n;
     }
 
+    void reserve(size_type n) {
+        if (n > this->max_size()) throw std::length_error("vector");
+
+        if (n > this->capacity()) this->extend(n);
+    }
+
     // allocator functions
     allocator_type get_allocator() const { return this->alloc; }
 
