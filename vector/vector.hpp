@@ -85,6 +85,16 @@ class vector {
     // allocator functions
     allocator_type get_allocator() const { return this->alloc; }
 
+    // destructor
+    ~vector() {
+        if (!this->capacity()) return;
+
+        for (size_type idx = 0; idx < this->size(); idx++) {
+            this->alloc.destroy(this->arr + idx);
+        }
+
+        this->alloc.deallocate(this->arr, this->capacity());
+    }
 };
 }  // namespace ft
 
