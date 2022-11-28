@@ -81,6 +81,10 @@ class vector {
     size_type capacity() const { return this->cap; }
     size_type size() const { return this->_size; }
     size_type max_size() const { return this->alloc.max_size(); }
+
+    // allocator functions
+    allocator_type get_allocator() const { return this->alloc; }
+
 };
 }  // namespace ft
 
