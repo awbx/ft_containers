@@ -273,6 +273,31 @@ class vector {
         }
         this->_size += n;
     }
+
+    template <class InputIterator>
+    void insert(iterator position, InputIterator first, InputIterator last) {
+        difference_type diff = this->begin() - position;
+        difference_type n = ft::distance(first, last);
+
+        if (diff < 0 || (size_type)diff > this->max_size() || n < 0) return;
+
+        if (!this->capacity()) this->reserve(n);
+
+        if (this->size() + n > this->max_size())
+            throw std::length_error("vector");
+        else if (this->size() + n > this->capacity())
+            this->reserve(this->size() + n);
+
+        std::memmove(this->arr + diff + n, this->arr + diff, (this->size() - diff) * sizeof(value_type));
+
+        size_type idx = 0;
+        while (first != last && idx < (size_type)n) {
+            this->alloc.construct(this->arr + diff + idx, *first);
+            first++;
+            idx++;
+        }
+        this->_size += n;
+    }
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
