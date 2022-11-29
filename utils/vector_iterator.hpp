@@ -24,7 +24,14 @@ class vector_iterator : public ft::iterator<ft::random_access_iterator_tag, T> {
 
     explicit vector_iterator(pointer _ptr) : ptr(_ptr) {}
 
-    vector_iterator(const vector_iterator<T> &vector_iter) : ptr(vector_iter.base()) {}
+    vector_iterator(vector_iterator const &vector_iter) : ptr(vector_iter.base()) {}
+
+    vector_iterator operator=(vector_iterator const &rhs) {
+        if (this != &rhs) {
+            this->ptr = rhs.base();
+        }
+        return *this;
+    }
 
     pointer base() const { return this->ptr; }
 
@@ -109,7 +116,7 @@ vector_iterator<Iterator> operator+(typename vector_iterator<Iterator>::differen
 
 template <class Iterator>
 typename vector_iterator<Iterator>::difference_type operator-(const vector_iterator<Iterator> &lhs, const vector_iterator<Iterator> &rhs) {
-    return rhs.base() - lhs.base();
+    return lhs.base() - rhs.base();
 }
 
 }  // namespace ft
