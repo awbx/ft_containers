@@ -243,7 +243,10 @@ class vector {
             return this->begin();
         }
 
-        if (this->size() + 1 > this->capacity()) this->reserve(this->capacity() * 2);
+        if (this->size() + 1 > this->max_size())
+            throw std::length_error("vector");
+        else if (this->size() + 1 > this->capacity())
+            this->reserve(this->capacity() * 2);
         right_shift(diff, val);
         this->_size++;
 
