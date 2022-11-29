@@ -247,10 +247,31 @@ class vector {
             throw std::length_error("vector");
         else if (this->size() + 1 > this->capacity())
             this->reserve(this->capacity() * 2);
-        right_shift(diff, val);
+        std::memmove(this->arr + diff + 1, this->arr + diff, (this->size() - diff) * sizeof(value_type));
+        this->arr[diff] = val;
         this->_size++;
 
         return this->begin() + diff;
+    }
+
+    void insert(iterator position, size_type n, const value_type& val) {
+        difference_type diff = this->begin() - position;
+
+        if (!this->capacity()) this->reserve(n);
+
+        if (this->size() + n > this->max_size())
+            throw std::length_error("vector");
+        else if (this->size() + n > this->capacity())
+            this->reserve(this->size() + n);
+
+        std::memmove(this->arr + diff + n, this->arr + diff, (this->size() - diff) * sizeof(value_type));
+
+        size_type idx = 0;
+        while (idx < n) {
+            this->alloc.construct(this->arr + diff + idx, val);
+            idx++;
+        }
+        this->_size += n;
     }
     // -------------------------------- End of modifiers functions ----------------------------
 
