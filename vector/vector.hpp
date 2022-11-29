@@ -275,7 +275,7 @@ class vector {
     }
 
     template <class InputIterator>
-    void insert(iterator position, InputIterator first, InputIterator last) {
+    void insert(iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
         difference_type diff = this->begin() - position;
         difference_type n = ft::distance(first, last);
 
