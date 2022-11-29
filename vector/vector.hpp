@@ -230,6 +230,25 @@ class vector {
 
     void pop_back() { this->alloc.destroy(this->arr + this->_size--); }  // CHECK : does linux implementation throw an error in case of empty vector!
 
+    void right_shift(size_type pos, value_type const& val) {
+        std::memmove(this->arr + pos + 1, this->arr + pos, (this->size() - pos) * sizeof(value_type));
+        this->arr[pos] = val;
+    }
+
+    iterator insert(iterator const& position, const value_type& val) {
+        difference_type diff = this->begin() - position;
+
+        if (!this->capacity()) {
+            this->push_back(val);
+            return this->begin();
+        }
+
+        if (this->size() + 1 > this->capacity()) this->reserve(this->capacity() * 2);
+        right_shift(diff, val);
+        this->_size++;
+
+        return this->begin() + diff;
+    }
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
