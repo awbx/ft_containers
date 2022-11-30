@@ -77,12 +77,12 @@ class vector {
         // copy `arr` of x to `this->arr`
         std::memcpy(this->arr, x.arr, this->size() * sizeof(value_type));
     }
-	// copy assignment operator
+    // copy assignment operator
     vector& operator=(const vector& x) {
         if (this != &x) {
             if (x.size() > this->capacity()) this->extend(x.size(), false);
             this->_size = x.size();
-            std::memcpy(this->arr, x.arr, x.size() * sizeof(value_type));
+            std::memmove(this->arr, x.arr, x.size() * sizeof(value_type));
         }
 
         return *this;
