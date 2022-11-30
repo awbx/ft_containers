@@ -134,10 +134,7 @@ class vector {
             for (; idx < this->size(); idx++) this->alloc.destroy(this->arr + idx);
         } else {
             if (n > this->capacity()) {
-                if (n < this->capacity() * 2)
-                    this->extend(this->capacity() * 2);
-                else
-                    this->extend(n);
+                this->extend(std::max<size_type>(n, this->capacity() * 2));
             }
 
             for (; this->_size < n; this->_size++) this->alloc.construct(this->arr + this->_size, val);
@@ -303,7 +300,7 @@ class vector {
         difference_type diff = position - this->begin();
 
         this->alloc.destroy(this->arr + diff);
-		std::memmove(this->arr + diff, this->arr + diff + 1, (this->size() - diff - 1) * sizeof(value_type));
+        std::memmove(this->arr + diff, this->arr + diff + 1, (this->size() - diff - 1) * sizeof(value_type));
         this->_size--;
         return this->begin() + diff;
     }
