@@ -322,6 +322,7 @@ class vector {
         return this->begin() + diff;
     }
 
+    void clear() { this->erase(this->begin(), this->end()); }
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
