@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "equal.hpp"
+#include "lexicographical_compare.hpp"
 #include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
 
