@@ -322,6 +322,12 @@ class vector {
         return this->begin() + diff;
     }
 
+    void swap(vector& x) {
+        std::swap(this->cap, x.cap);
+        std::swap(this->_size, x._size);
+        std::swap(this->arr, x.arr);
+    }
+
     void clear() { this->erase(this->begin(), this->end()); }
     // -------------------------------- End of modifiers functions ----------------------------
 
