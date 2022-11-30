@@ -230,13 +230,8 @@ class vector {
 
     void pop_back() { this->alloc.destroy(this->arr + this->_size--); }  // CHECK : does linux implementation throw an error in case of empty vector!
 
-    void right_shift(size_type pos, value_type const& val) {
-        std::memmove(this->arr + pos + 1, this->arr + pos, (this->size() - pos) * sizeof(value_type));
-        this->arr[pos] = val;
-    }
-
     iterator insert(iterator const& position, const value_type& val) {
-        difference_type diff = this->begin() - position;
+        difference_type diff = position - this->begin();
 
         if (!this->capacity()) {
             this->push_back(val);
@@ -255,7 +250,7 @@ class vector {
     }
 
     void insert(iterator position, size_type n, const value_type& val) {
-        difference_type diff = this->begin() - position;
+        difference_type diff = position - this->begin();
 
         if (!this->capacity()) this->reserve(n);
 
@@ -276,10 +271,12 @@ class vector {
 
     template <class InputIterator>
     void insert(iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
-        difference_type diff = this->begin() - position;
+        difference_type diff = position - this->begin();
         difference_type n = ft::distance(first, last);
 
         if (diff < 0 || (size_type)diff > this->max_size() || n < 0) return;
+
+        vector<value_type> vec(first, last);
 
         if (!this->capacity()) this->reserve(n);
 
@@ -291,9 +288,10 @@ class vector {
         std::memmove(this->arr + diff + n, this->arr + diff, (this->size() - diff) * sizeof(value_type));
 
         size_type idx = 0;
-        while (first != last && idx < (size_type)n) {
-            this->alloc.construct(this->arr + diff + idx, *first);
-            first++;
+        iterator  it = vec.begin();
+        while (it != vec.end()) {
+            this->alloc.construct(this->arr + diff + idx, *it);
+            it++;
             idx++;
         }
         this->_size += n;
