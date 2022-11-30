@@ -296,6 +296,17 @@ class vector {
         }
         this->_size += n;
     }
+
+    iterator erase(iterator position) {
+        difference_type diff = position - this->begin();
+
+        this->alloc.destroy(this->arr + diff);
+		std::memmove(this->arr + diff, this->arr + diff + 1, (this->size() - diff - 1) * sizeof(value_type));
+        this->_size--;
+        return this->begin() + diff;
+    }
+
+    // iterator erase(iterator first, iterator last);
     // -------------------------------- End of modifiers functions ----------------------------
 
     // allocator functions
