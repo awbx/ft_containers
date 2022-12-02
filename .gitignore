@@ -5,6 +5,7 @@
 a.out
 ft_containers
 main
+test
 
 # ignore dSYM folders
 *.dSYM/*
