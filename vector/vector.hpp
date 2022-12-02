@@ -39,6 +39,17 @@ class vector {
         this->_size = _size;
     }
 
+    void extend(size_type new_cap, bool do_copy = true) {
+        size_type tmp_cap = this->capacity();
+        pointer   tmp_arr = this->arr;
+
+        this->cap = new_cap;
+        this->arr = this->alloc.allocate(this->capacity());
+        if (do_copy) std::memcpy(this->arr, tmp_arr, this->size() * sizeof(value_type));
+        for (size_type idx = 0; idx < this->size(); idx++) this->alloc.destroy(tmp_arr + idx);
+        this->alloc.deallocate(tmp_arr, tmp_cap);
+    }
+
    public:
     // constructors of vector
     explicit vector(const allocator_type& alloc = allocator_type()) {
@@ -112,19 +123,6 @@ class vector {
     size_type size() const { return this->_size; }
     size_type max_size() const { return this->alloc.max_size(); }
     bool      empty() const { return !this->size(); }
-
-    // Todo : make this function private !
-
-    void extend(size_type new_cap, bool do_copy = true) {
-        size_type tmp_cap = this->capacity();
-        pointer   tmp_arr = this->arr;
-
-        this->cap = new_cap;
-        this->arr = this->alloc.allocate(this->capacity());
-        if (do_copy) std::memcpy(this->arr, tmp_arr, this->size() * sizeof(value_type));
-        for (size_type idx = 0; idx < this->size(); idx++) this->alloc.destroy(tmp_arr + idx);
-        this->alloc.deallocate(tmp_arr, tmp_cap);
-    }
 
     void resize(size_type n, value_type val = value_type()) {
         if (n > this->max_size()) throw std::length_error("vector");
