@@ -16,7 +16,7 @@ HEADERS = utils/equal.hpp\
 	stack/stack.hpp\
 	tests/tests.hpp
 
-TEST_FILES = tests/tests.cpp stack/stack_test.cpp\
+TEST_FILES = tests/tests.cpp stack/stack_tests.cpp\
 	# vector/vector_test.cpp
 
 TEST_OBJS = $(TEST_FILES:%.cpp=%.o)
