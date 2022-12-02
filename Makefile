@@ -2,10 +2,20 @@ NAME=ft_containers
 
 CC=c++
 
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -std=c++11 -fsanitize=address -g
 
-HEADERS = utils/pair.hpp  utils/type_traits.hpp utils/iterator_traits.hpp utils/iterator.hpp
-INCLUDES = -I utils
+HEADERS = utils/equal.hpp\
+	utils/iterator_traits.hpp\
+	utils/iterator.hpp\
+	utils/lexicographical_compare.hpp\
+	utils/pair.hpp\
+	utils/reverse_iterator.hpp\
+	utils/type_traits.hpp\
+	utils/vector_iterator.hpp\
+	vector/vector.hpp
+
+
+INCLUDES = -I utils -I vector
 
 SRC_FILES = ft_container.cpp
 
@@ -15,7 +25,10 @@ all: $(NAME)
 
 
 $(NAME): $(OBJ_FILES)
-	$(CC) $(CFLAGS) $< -o $@ -fsanitize=address
+	$(CC) $(CFLAGS) $< -o $@
+
+run:
+	./$(NAME)
 
 %.o: %.cpp $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
