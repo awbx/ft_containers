@@ -2,7 +2,7 @@ NAME=ft_containers
 
 CC=c++
 
-CFLAGS = -Wall -Werror -Wextra -std=c++11 -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 
 HEADERS = utils/equal.hpp\
 	utils/iterator_traits.hpp\
@@ -12,10 +12,11 @@ HEADERS = utils/equal.hpp\
 	utils/reverse_iterator.hpp\
 	utils/type_traits.hpp\
 	utils/vector_iterator.hpp\
-	vector/vector.hpp
+	vector/vector.hpp\
+	stack/stack.hpp
 
 
-INCLUDES = -I utils -I vector
+INCLUDES = -I utils -I vector -I stack
 
 SRC_FILES = ft_container.cpp
 
