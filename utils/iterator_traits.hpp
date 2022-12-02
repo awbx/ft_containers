@@ -1,7 +1,6 @@
 #ifndef __ITERATOR_TRAITS_HPP__
 #define __ITERATOR_TRAITS_HPP__
 
-#include "iterator.hpp"
 
 namespace ft {
 
