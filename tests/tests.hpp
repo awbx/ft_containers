@@ -7,7 +7,7 @@
 #include <stack>     // std::stack
 #include <vector>    // std::vector
 
-#if FT`
+#if FT
 namespace ft = std;
 #else
 #include "stack.hpp"  // ft::stack
