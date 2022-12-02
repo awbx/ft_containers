@@ -13,10 +13,16 @@ HEADERS = utils/equal.hpp\
 	utils/type_traits.hpp\
 	utils/vector_iterator.hpp\
 	vector/vector.hpp\
-	stack/stack.hpp
+	stack/stack.hpp\
+	tests/tests.hpp
+
+TEST_FILES = tests/tests.cpp stack/stack_test.cpp\
+	# vector/vector_test.cpp
+
+TEST_OBJS = $(TEST_FILES:%.cpp=%.o)
 
 
-INCLUDES = -I utils -I vector -I stack
+INCLUDES = -I utils -I vector -I stack -I tests
 
 SRC_FILES = ft_container.cpp
 
@@ -28,6 +34,9 @@ all: $(NAME)
 $(NAME): $(OBJ_FILES)
 	$(CC) $(CFLAGS) $< -o $@
 
+test: $(TEST_OBJS)
+	$(CC) $(CFLAGS) $(TEST_OBJS) -o $@
+
 run:
 	./$(NAME)
 
@@ -35,10 +44,11 @@ run:
 	$(CC) $(CFLAGS) -c $< -o $@ $(INCLUDES)
 
 clean:
-	rm -rf $(OBJ_FILES)
+	rm -rf $(OBJ_FILES) $(TEST_OBJS)
 
 fclean: clean
 	rm -rf $(NAME)
+	rm -rf test
 
 re: fclean all
 
