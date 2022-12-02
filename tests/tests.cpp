@@ -6,4 +6,7 @@ void start_test(const char *test_name, void (*func)(void)) {
     std::cout << "------------------- End Of " << test_name << " -------------------\n";
 }
 
-int main() { stack_main(); }
+int main() {
+    // stack_main();
+    vector_main();
+}

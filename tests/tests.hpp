@@ -7,7 +7,7 @@
 #include <stack>     // std::stack
 #include <vector>    // std::vector
 
-#if FT
+#if FT`
 namespace ft = std;
 #else
 #include "stack.hpp"  // ft::stack
@@ -17,5 +17,6 @@ namespace ft = std;
 void start_test(const char *test_name, void (*func)(void));
 
 void stack_main(void);
+void vector_main(void);
 
 #endif
