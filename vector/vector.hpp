@@ -2,11 +2,14 @@
 #define __VECTOR_HPP__
 
 #include <memory>
+#include <algorithm>
 
 #include "equal.hpp"
 #include "lexicographical_compare.hpp"
 #include "reverse_iterator.hpp"
 #include "vector_iterator.hpp"
+#include "type_traits.hpp"
+#include "iterator.hpp"
 
 namespace ft {
 
@@ -68,7 +71,7 @@ class vector {
 
     template <class InputIterator>
     vector(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last, const allocator_type& alloc = allocator_type()) {
-        difference_type diff = ft::distance(first, last);
+        difference_type diff = ft::_distance(first, last);
 
         if (diff < 0 || (size_type)diff > this->max_size()) throw std::length_error("vector");
 
@@ -174,7 +177,7 @@ class vector {
 
     template <class InputIterator>
     void assign(typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
-        difference_type diff = ft::distance(first, last);
+        difference_type diff = ft::_distance(first, last);
         if (diff < 0 || (size_type)diff > this->max_size()) throw std::length_error("vector");
 
         bool do_construct = false;
@@ -269,7 +272,7 @@ class vector {
     template <class InputIterator>
     void insert(iterator position, typename ft::enable_if<!ft::is_integral<InputIterator>::value, InputIterator>::type first, InputIterator last) {
         difference_type diff = position - this->begin();
-        difference_type n = ft::distance(first, last);
+        difference_type n = ft::_distance(first, last);
 
         if (diff < 0 || (size_type)diff > this->max_size() || n < 0) return;
 
