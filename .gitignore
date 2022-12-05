@@ -6,6 +6,7 @@ a.out
 ft_containers
 main
 test
+*/red_black_tree
 
 # ignore dSYM folders
 *.dSYM/*
