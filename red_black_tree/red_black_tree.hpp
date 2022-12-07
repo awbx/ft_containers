@@ -92,6 +92,22 @@ class RedBlackTree {
     return root;
   }
 
+  pointer getMinimum(void) const {
+    pointer min = this->_root;
+
+    while (min && min->left) {
+      min = min->left;
+    }
+    return min;
+  }
+  pointer getMaximum(void) const {
+    pointer max = this->_root;
+
+    while (max && max->right) {
+      max = max->right;
+    }
+    return max;
+  }
   static void label(pointer node, int &id) {
     std::cout << "\tNode" << id << "[label=\"" << (node ? std::to_string(node->data.first) : "NIL") << "\""
               << ", fillcolor=\"" << (IsRed(node) ? "red" : "black") << "\""
