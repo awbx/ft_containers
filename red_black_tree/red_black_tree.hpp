@@ -23,31 +23,126 @@
 namespace ft {
 
 template <class T>
-struct Node {
-  T     data;
-  Node *left;
-  Node *right;
-  Node *parent;
-  bool  color;
+class Node {
+ public:
+  typedef T                 value_type;
+  typedef Node<value_type> *pointer;
 
-  Node(const T &data, Node *parent = nil, bool color = true) : data(data), left(nil), right(nil), parent(parent), color(color) {}
+  // members;
+  T       data;
+  pointer left;
+  pointer right;
+  pointer parent;
+  bool    color;
+
+  Node(const T &data, pointer parent = nil, bool color = true) : data(data), left(nil), right(nil), parent(parent), color(color) {}
+
+  static pointer getMinimum(const pointer tree) {
+    pointer min = tree;
+
+    while (min && min->left) {
+      min = min->left;
+    }
+    return min;
+  }
+
+  static pointer getMaximum(const pointer tree) {
+    pointer max = tree;
+
+    while (max && max->right) {
+      max = max->right;
+    }
+    return max;
+  }
+  static pointer getSuccessor(pointer x) {
+    if (x->right != nil) return getMinimum(x->right);
+    pointer y = x->parent;
+    while (y != nil && y->right == x) {
+      x = y;
+      y = y->parent;
+    }
+    return y;
+  }
+
+  static pointer getPredecessor(pointer x) {
+    if (x->left != nil) return getMaximum(x->left);
+
+    pointer y = x->parent;
+
+    while (y != nil && y->left == x) {
+      x = y;
+      y = y->parent;
+    }
+    return y;
+  }
+
+  static pointer find(const pointer tree, const value_type &val) {
+    pointer tmp = tree;
+
+    while (tmp) {
+      if (tmp->data == val)
+        return tmp;
+      else if (val > tmp->data)
+        tmp = tmp->right;
+      else
+        tmp = tmp->left;
+    }
+
+    return tmp;
+  }
+
+  static void label(pointer node, int &id) {
+    std::cout << "\tNode" << id << "[label=\"" << (node ? std::to_string(node->data) : "NIL") << "\""
+              << ", fillcolor=\"" << (IsRed(node) ? "red" : "black") << "\""
+              << ", color=\"black\""
+              << ", shape=" << (IsNil(node) ? "record" : "circle") << ", fixedsize=true"
+              << ", fontcolor=\"white\""
+              << ", tooltip=\"The parent node is " << (node && node->parent ? std::to_string(node->parent->data) : "nil") << "\""
+              << ", style=filled" << ((IsNil(node)) ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
+  }
+
+  static void edge(int from, int to) {
+    std::cout << "\tNode" << from << " -> "
+              << "Node" << to << "[wieght=10]\n";
+  }
+
+  static int dfs(pointer tree, int &id) {
+    int my_id, l, r;
+    my_id = id++;
+    label(tree, my_id);
+    if (tree) {
+      l = dfs(tree->left, id);
+      r = dfs(tree->right, id);
+      edge(my_id, l);
+      edge(my_id, r);
+    }
+    return my_id;
+  }
+  
+  static void dump_dot(pointer tree) {
+    int id = 1;
+    std::cout << "digraph {\n";
+    dfs(tree, id);
+    std::cout << "}\n";
+  }
 };
 
 template <typename T, typename Compare, typename Alloc>
 class RedBlackTree {
  public:
   // member types
-  typedef T                                                                                           value_type;
-  typedef Node<value_type>                                                                            node_type;
-  typedef Compare                                                                                     key_compare;
-  typedef Alloc                                                                                       allocator_type;
-  typedef typename allocator_type::template rebind<Node<std::pair<const int, const char *> > >::other node_alloc;
-  typedef typename node_alloc::reference                                                              reference;
-  typedef typename node_alloc::const_reference                                                        const_reference;
-  typedef typename node_alloc::pointer                                                                pointer;
-  typedef typename node_alloc::const_pointer                                                          const_pointer;
-  typedef typename node_alloc::difference_type                                                        difference_type;
-  typedef typename node_alloc::size_type                                                              size_type;
+  typedef T                                                          value_type;
+  typedef Node<value_type>                                           node_type;
+  typedef Compare                                                    key_compare;
+  typedef Alloc                                                      allocator_type;
+  typedef typename allocator_type::template rebind<node_type>::other node_alloc;
+  typedef RedBlackTree<value_type, key_compare, allocator_type>      tree;
+  typedef typename node_alloc::reference                             reference;
+  typedef typename node_alloc::const_reference                       const_reference;
+  typedef typename node_alloc::pointer                               pointer;
+  typedef typename node_alloc::const_pointer                         const_pointer;
+  typedef typename node_alloc::difference_type                       difference_type;
+  typedef typename node_alloc::size_type                             size_type;
 
  private:
   pointer     _root;
@@ -92,25 +187,12 @@ class RedBlackTree {
     return root;
   }
 
-  pointer getMinimum(void) const { return this->getMinimum(this->_root); }
-  pointer getMinimum(const pointer tree) const {
-    pointer min = tree;
+  // find
+  pointer find(const value_type &val) { return node_type::find(this->_root, val); }
 
-    while (min && min->left) {
-      min = min->left;
-    }
-    return min;
-  }
+  pointer getMinimum(void) const { return node_type::getMinimum(this->_root); }
 
-  pointer getMaximum(void) const { return this->getMaximum(this->_root); }
-  pointer getMaximum(const pointer tree) const {
-    pointer max = tree;
-
-    while (max && max->right) {
-      max = max->right;
-    }
-    return max;
-  }
+  pointer getMaximum(void) const { return node_type::getMaximum(this->_root); }
 
   pointer getSuccessor(pointer x) const {
     if (x->right != nil) return this->getMinimum(x->right);
