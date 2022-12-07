@@ -111,8 +111,16 @@ class RedBlackTree {
     }
     return max;
   }
-  pointer getMaximum(pointer tree) const {
-    pointer max = tree;
+
+  pointer getSuccessor(pointer x) const {
+    if (x->right != nil) return this->getMinimum(x->right);
+    pointer y = x->parent;
+    while (y != nil && y->right == x) {
+      x = y;
+      y = y->parent;
+    }
+    return y;
+  }
 
     while (max && max->right) {
       max = max->right;
