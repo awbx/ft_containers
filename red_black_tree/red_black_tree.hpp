@@ -92,16 +92,27 @@ class RedBlackTree {
     return root;
   }
 
-  pointer getMinimum(void) const {
-    pointer min = this->_root;
+  pointer getMinimum(void) const { return this->getMinimum(this->_root); }
+  pointer getMinimum(const pointer tree) const {
+    pointer min = tree;
 
     while (min && min->left) {
       min = min->left;
     }
     return min;
   }
-  pointer getMaximum(void) const {
-    pointer max = this->_root;
+
+  pointer getMaximum(void) const { return this->getMaximum(this->_root); }
+  pointer getMaximum(const pointer tree) const {
+    pointer max = tree;
+
+    while (max && max->right) {
+      max = max->right;
+    }
+    return max;
+  }
+  pointer getMaximum(pointer tree) const {
+    pointer max = tree;
 
     while (max && max->right) {
       max = max->right;
