@@ -73,22 +73,22 @@ class RedBlackTree {
   // red black tree functions
 
   void insert(const value_type &val) {
-    this->_root = insert(this->_root, val);
+    this->_root = insert(this->_root, val, nil);
     this->_size++;
   }
 
-  pointer insert(pointer root, const value_type &val) {
+  pointer insert(pointer root, const value_type &val, pointer parent) {
     if (IsNil(root)) {
       pointer new_node = this->_alloc.allocate(1);
       this->_alloc.construct(new_node, val);
-      // if (rand() % 1000 & 1) ReColor(new_node);
+      new_node->parent = parent;
       return new_node;
     }
 
     if (this->_comp(val, root->data))
-      root->left = insert(root->left, val);
+      root->left = insert(root->left, val, root);
     else
-      root->right = insert(root->right, val);
+      root->right = insert(root->right, val, root);
     return root;
   }
 
@@ -98,6 +98,7 @@ class RedBlackTree {
               << ", color=\"black\""
               << ", shape=" << (IsNil(node) ? "record" : "circle") << ", fixedsize=true"
               << ", fontcolor=\"white\""
+              << ", tooltip=\"The parent node is " << (node && node->parent ? std::to_string(node->parent->data.first) : "nil") << "\""
               << ", style=filled" << ((IsNil(node)) ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
   }
   static void edge(int from, int to) {
