@@ -199,50 +199,39 @@ class RedBlackTree {
     pointer y = x->right;
     x->right = y->left;
     if (!IsNil(y->left)) {
-      y->left->parent = x;
+      GetParent(y->left) = x;
     }
-    y->parent = x->parent;
+    GetParent(y) = GetParent(x);
     if (IsNil(x->parent)) {
       this->_root = y;
     } else if (IsLeftChild(x)) {
-      x->parent->left = y;
+      GetParent(x)->left = y;
     } else {
-      x->parent->right = y;
+      GetParent(x)->right = y;
     }
     y->left = x;
-    x->parent = y;
+    GetParent(x) = y;
     return y;
   }
 
-    while (max && max->right) {
-      max = max->right;
+  pointer rightRotate(pointer x) {
+    if (IsNil(x) && IsNil(x->left)) return nil;
+    pointer y = x->left;
+    x->left = y->right;
+    if (!IsNil(y->right)) {
+      GetParent(y->right) = x;
     }
-    return max;
-  }
-  static void label(pointer node, int &id) {
-    std::cout << "\tNode" << id << "[label=\"" << (node ? std::to_string(node->data.first) : "NIL") << "\""
-              << ", fillcolor=\"" << (IsRed(node) ? "red" : "black") << "\""
-              << ", color=\"black\""
-              << ", shape=" << (IsNil(node) ? "record" : "circle") << ", fixedsize=true"
-              << ", fontcolor=\"white\""
-              << ", tooltip=\"The parent node is " << (node && node->parent ? std::to_string(node->parent->data.first) : "nil") << "\""
-              << ", style=filled" << ((IsNil(node)) ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
-  }
-  static void edge(int from, int to) {
-    std::cout << "\tNode" << from << " -> "
-              << "Node" << to << "[wieght=10]\n";
-  }
-  static int dfs(pointer tree, int &id) {
-    int my_id, l, r;
-    my_id = id++;
-    label(tree, my_id);
-    if (tree) {
-      l = dfs(tree->left, id);
-      r = dfs(tree->right, id);
-      edge(my_id, l);
-      edge(my_id, r);
+    GetParent(y) = GetParent(x);
+    if (IsNil(x->parent)) {
+      this->_root = y;
+    } else if (x == GetParent(x)->right) {
+      GetParent(x)->right = y;
+    } else {
+      GetParent(x)->left = y;
     }
-    return my_id;
+    y->right = x;
+    GetParent(x) = y;
+    return y;
   }
   void dump_dot() const {
     int id = 1;
