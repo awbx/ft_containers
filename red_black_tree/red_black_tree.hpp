@@ -194,13 +194,23 @@ class RedBlackTree {
 
   pointer getMaximum(void) const { return node_type::getMaximum(this->_root); }
 
-  pointer getSuccessor(pointer x) const {
-    if (x->right != nil) return this->getMinimum(x->right);
-    pointer y = x->parent;
-    while (y != nil && y->right == x) {
-      x = y;
-      y = y->parent;
+  pointer leftRotate(pointer x) {
+    if (IsNil(x) || IsNil(x->right)) return nil;
+    pointer y = x->right;
+    x->right = y->left;
+    if (!IsNil(y->left)) {
+      y->left->parent = x;
     }
+    y->parent = x->parent;
+    if (IsNil(x->parent)) {
+      this->_root = y;
+    } else if (IsLeftChild(x)) {
+      x->parent->left = y;
+    } else {
+      x->parent->right = y;
+    }
+    y->left = x;
+    x->parent = y;
     return y;
   }
 
