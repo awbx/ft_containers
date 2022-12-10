@@ -203,41 +203,26 @@ class RedBlackTree {
   }
   void insertFixUp(pointer z) {
     while (IsRed(GetParent(z))) {
-      if (IsLeftChild(GetParent(z))) {
-        pointer uncle = GetUncle(z);
+      pointer uncle = GetUncle(z);
 
-        if (IsRed(uncle)) {  // start of case 1
-          ReColor(GetParent(z));
-          ReColor(GetGrandParent(z));
-          ReColor(uncle);
-          z = GetGrandParent(z);  // end of case 1
-
-        } else if (IsRightChild(z)) {  // start of case 2
-          z = GetParent(z);
-          this->leftRotate(z);  // end of case 2
-        } else {
-          ReColor(GetParent(z));  // start of case 3
-          ReColor(GetGrandParent(z));
-          this->rightRotate(GetGrandParent(z));  // end of case 3
-        }
-
-      } else {  // mirror cases
-        pointer uncle = GetUncle(z);
-
-        if (IsRed(uncle)) {  // start of case 1
-          ReColor(GetParent(z));
-          ReColor(GetGrandParent(z));
-          ReColor(uncle);
-          z = GetGrandParent(z);  // end of case 1
-
-        } else if (IsLeftChild(z)) {  // start of case 2
-          z = GetParent(z);
-          this->rightRotate(z);  // end of case 2
-        } else {
-          ReColor(GetParent(z));  // start of case 3
-          ReColor(GetGrandParent(z));
+      if (IsRed(uncle)) {  // start of case 1
+        ReColor(GetParent(z));
+        ReColor(GetGrandParent(z));
+        ReColor(uncle);
+        z = GetGrandParent(z);                                    // end of case 1
+      } else if (IsRightChild(z) && IsLeftChild(GetParent(z))) {  // start of case 2
+        z = GetParent(z);
+        this->leftRotate(z);
+      } else if (IsLeftChild(z) && IsRightChild(GetParent(z))) {
+        z = GetParent(z);
+        this->rightRotate(z);  // end of case 2
+      } else {
+        ReColor(GetParent(z));  // start of case 3
+        ReColor(GetGrandParent(z));
+        if (IsLeftChild(GetParent(z)))
+          this->rightRotate(GetGrandParent(z));
+        else
           this->leftRotate(GetGrandParent(z));  // end of case 3
-        }
       }
     }
     this->_root->color = black;
