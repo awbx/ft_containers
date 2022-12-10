@@ -10,6 +10,7 @@ test
 
 # ignore dSYM folders
 *.dSYM/*
+red_black_tree/*.dSYM
 
 # ignore object files
 *.o
