@@ -199,18 +199,18 @@ class RedBlackTree {
     pointer y = x->right;
     x->right = y->left;
     if (!IsNil(y->left)) {
-      GetParent(y->left) = x;
+      y->left->parent = x;
     }
-    GetParent(y) = GetParent(x);
+    y->parent = GetParent(x);
     if (IsNil(x->parent)) {
       this->_root = y;
     } else if (IsLeftChild(x)) {
-      GetParent(x)->left = y;
+      x->parent->left = y;
     } else {
-      GetParent(x)->right = y;
+      x->parent->right = y;
     }
     y->left = x;
-    GetParent(x) = y;
+    x->parent = y;
     return y;
   }
 
@@ -219,18 +219,18 @@ class RedBlackTree {
     pointer y = x->left;
     x->left = y->right;
     if (!IsNil(y->right)) {
-      GetParent(y->right) = x;
+      y->right->parent = x;
     }
-    GetParent(y) = GetParent(x);
+    y->parent = GetParent(x);
     if (IsNil(x->parent)) {
       this->_root = y;
     } else if (x == GetParent(x)->right) {
-      GetParent(x)->right = y;
+      x->parent->right = y;
     } else {
-      GetParent(x)->left = y;
+      x->parent->left = y;
     }
     y->right = x;
-    GetParent(x) = y;
+    x->parent = y;
     return y;
   }
   void dump_dot() const {
