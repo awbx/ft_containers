@@ -14,6 +14,9 @@
 #define IsLeftChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->left)
 #define IsRightChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->right)
 #define IsChildrenRed(x) (!IsNil(x) && (IsNil(x->left) || IsBlack(x->left)) && (IsNil(x->right) || IsBlack(x->right)))
+#define GetParent(x) (!IsNil(x) && !IsNil(x->parent) ? x->parent : nil)
+#define GetGrandParent(x) (GetParent(GetParent(x)))
+#define GetUncle(x) (GetGrandParent(x) ? (IsLeftChild(GetParent(x)) ? GetGrandParent(x)->right : GetGrandParent(x)->left) : nil)
 
 #define ReColor(x) ((x)->color ^= 1);
 
@@ -167,25 +170,78 @@ class RedBlackTree {
 
   // red black tree functions
 
-  void insert(const value_type &val) {
-    this->_root = insert(this->_root, val, nil);
-    this->_size++;
-  }
+  pointer insert(const value_type &val) {
+    pointer z = this->_alloc.allocate(1);
+    this->_alloc.construct(z, val);
 
-  pointer insert(pointer root, const value_type &val, pointer parent) {
-    if (IsNil(root)) {
-      pointer new_node = this->_alloc.allocate(1);
-      this->_alloc.construct(new_node, val);
-      new_node->parent = parent;
-      return new_node;
+    pointer y = nil;
+    pointer x = this->_root;
+
+    // find the right position to put z
+    while (!IsNil(x)) {
+      y = x;  // track the parent
+      if (this->_comp(z->data, x->data))
+        x = x->left;
+      else
+        x = x->right;
     }
 
-    if (this->_comp(val, root->data))
-      root->left = insert(root->left, val, root);
+    if (IsNil(y))
+      this->_root = z;
+    else if (this->_comp(z->data, y->data))
+      y->left = z;
     else
-      root->right = insert(root->right, val, root);
-    return root;
+      y->right = z;
+
+    // set z parent
+    z->parent = y;
+
+    this->insertFixUp(z);
+    // increase the size of tree
+    this->_size++;
+    return z;
   }
+  void insertFixUp(pointer z) {
+    while (IsRed(GetParent(z))) {
+      if (IsLeftChild(GetParent(z))) {
+        pointer uncle = GetUncle(z);
+
+        if (IsRed(uncle)) {  // start of case 1
+          ReColor(GetParent(z));
+          ReColor(GetGrandParent(z));
+          ReColor(uncle);
+          z = GetGrandParent(z);  // end of case 1
+
+        } else if (IsRightChild(z)) {  // start of case 2
+          z = GetParent(z);
+          this->leftRotate(z);  // end of case 2
+        } else {
+          ReColor(GetParent(z));  // start of case 3
+          ReColor(GetGrandParent(z));
+          this->rightRotate(GetGrandParent(z));  // end of case 3
+        }
+
+      } else {  // mirror cases
+        pointer uncle = GetUncle(z);
+
+        if (IsRed(uncle)) {  // start of case 1
+          ReColor(GetParent(z));
+          ReColor(GetGrandParent(z));
+          ReColor(uncle);
+          z = GetGrandParent(z);  // end of case 1
+
+        } else if (IsLeftChild(z)) {  // start of case 2
+          z = GetParent(z);
+          this->rightRotate(z);  // end of case 2
+        } else {
+          ReColor(GetParent(z));  // start of case 3
+          ReColor(GetGrandParent(z));
+          this->leftRotate(GetGrandParent(z));  // end of case 3
+        }
+      }
+    }
+    this->_root->color = black;
+  };
 
   // find
   pointer find(const value_type &val) { return node_type::find(this->_root, val); }
