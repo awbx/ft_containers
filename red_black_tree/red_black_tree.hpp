@@ -160,9 +160,14 @@ class RedBlackTree {
   node_alloc  _alloc;
   key_compare _comp;
 
+  pointer _end;
+
  public:
   // The default constructor creates an empty container, with no elements.
-  RedBlackTree() : _root(nil), _size(0){};
+  RedBlackTree() : _root(nil), _size(0) {
+    this->_end = this->_alloc.allocate(1);
+    this->_alloc.construct(this->_end, value_type());
+  };
 
   // capacity functions
   bool      empty() const { return !this->size(); }
@@ -174,6 +179,21 @@ class RedBlackTree {
   ~RedBlackTree(){
       // TODO: deallocate all nodes
   };
+
+  // set & unset the _end
+  void set_end(void) {
+    if (!IsNil(this->_root)) {
+      this->_root->parent = this->_end;
+      this->_end->left = this->_root;
+    }
+  }
+
+  void unset_end(void) {
+    if (!IsNil(this->_root)) {
+      _root->parent = nil;
+      this->_end->left = nil;
+    }
+  }
 
   // red black tree functions
 
