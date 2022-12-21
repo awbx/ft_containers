@@ -89,16 +89,17 @@ class Node {
     return y;
   }
 
-  static pointer find(const pointer tree, const value_type &val) {
+  template <typename Compare>
+  static pointer find(const pointer tree, const value_type &val, Compare comp = Compare()) {
     pointer tmp = tree;
 
     while (tmp) {
-      if (tmp->data == val)
-        return tmp;
-      else if (val > tmp->data)
+      if (comp(val, tmp->data))
+        tmp = tmp->left;
+      else if (comp(tmp->data, val))
         tmp = tmp->right;
       else
-        tmp = tmp->left;
+        return tmp;
     }
 
     return tmp;
@@ -292,7 +293,7 @@ class RedBlackTree {
   };
 
   // find
-  pointer find(const value_type &val) { return node_type::find(this->_root, val); }
+  pointer find(const value_type &val) { return node_type::template find<key_compare>(this->_root, val, this->_comp); }
 
   pointer getMinimum(void) const { return node_type::getMinimum(this->_root); }
 
