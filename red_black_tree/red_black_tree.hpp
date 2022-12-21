@@ -146,11 +146,15 @@ class RedBlackTree {
   typedef Compare                                                    key_compare;
   typedef Alloc                                                      allocator_type;
   typedef typename allocator_type::template rebind<node_type>::other node_alloc;
-  typedef RedBlackTree<value_type, key_compare, allocator_type>      tree;
+  typedef RedBlackTree<value_type, key_compare, node_alloc>          tree;
   typedef typename node_alloc::reference                             reference;
   typedef typename node_alloc::const_reference                       const_reference;
   typedef typename node_alloc::pointer                               pointer;
   typedef typename node_alloc::const_pointer                         const_pointer;
+  typedef ft::tree_iterator<value_type>                              iterator;
+  typedef ft::tree_iterator<const value_type>                        const_iterator;
+  typedef ft::reverse_iterator<iterator>                             reverse_iterator;
+  typedef ft::reverse_iterator<const_iterator>                       const_reverse_iterator;
   typedef typename node_alloc::difference_type                       difference_type;
   typedef typename node_alloc::size_type                             size_type;
 
@@ -207,6 +211,20 @@ class RedBlackTree {
       this->_end->left = nil;
     }
   }
+
+  // iterator
+
+  iterator       begin() { return iterator(this->size() ? this->getMinimum() : this->_end); }
+  const_iterator begin() const { return iterator(this->size() ? this->getMinimum() : this->_end); }
+
+  iterator       end() { return iterator(this->_end); }
+  const_iterator end() const { return iterator(this->_end); }
+
+  reverse_iterator       rbegin() { return reverse_iterator(this->end()); }
+  const_reverse_iterator rbegin() const { return reverse_iterator(this->end()); }
+
+  reverse_iterator       rend() { return reverse_iterator(this->begin()); }
+  const_reverse_iterator rend() const { return reverse_iterator(this->begin()); }
 
   // red black tree functions
 
