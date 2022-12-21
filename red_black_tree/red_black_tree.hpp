@@ -176,10 +176,23 @@ class RedBlackTree {
 
   allocator_type get_allocator() const { return this->_alloc; }
 
-  ~RedBlackTree(){
-      // TODO: deallocate all nodes
+  ~RedBlackTree() {
+    // TODO: deallocate all nodes
+    this->_alloc.destroy(this->_end);
+    this->_alloc.deallocate(this->_end, 1);
+    this->clean(this->_root);
   };
 
+  void clean(pointer node) {
+    if (IsNil(node)) return;
+
+    pointer left = node->left;
+    pointer right = node->right;
+    this->_alloc.destroy(node);
+    this->_alloc.deallocate(node, 1);
+    clean(left);
+    clean(right);
+  }
   // set & unset the _end
   void set_end(void) {
     if (!IsNil(this->_root)) {
