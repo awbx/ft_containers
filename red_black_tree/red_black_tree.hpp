@@ -263,6 +263,7 @@ class RedBlackTree {
     return z;
   }
   void insertFixUp(pointer z) {
+    this->unset_end();
     while (IsRed(GetParent(z))) {
       pointer uncle = GetUncle(z);
 
@@ -287,6 +288,7 @@ class RedBlackTree {
       }
     }
     this->_root->color = black;
+    this->set_end();
   };
 
   // find
