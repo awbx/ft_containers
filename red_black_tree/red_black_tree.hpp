@@ -7,14 +7,14 @@
 #define black false
 #define nil 0
 
-#define IsRed(x) ((x) && (x)->color == true)
+#define IsRed(x) ((x) && (x)->color == red)
 #define IsBlack(x) (!IsRed(x))
 #define IsRoot(x) ((x) && (x)->parent == nil)
 #define IsNil(x) ((x) == nil)
 #define IsLeftChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->left)
 #define IsRightChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->right)
 #define IsChildrenRed(x) (!IsNil(x) && (IsNil(x->left) || IsBlack(x->left)) && (IsNil(x->right) || IsBlack(x->right)))
-#define GetParent(x) (!IsNil(x) && !IsNil(x->parent) ? x->parent : nil)
+#define GetParent(x) (!IsNil(x) ? x->parent : nil)
 #define GetGrandParent(x) (GetParent(GetParent(x)))
 #define GetUncle(x) (GetGrandParent(x) ? (IsLeftChild(GetParent(x)) ? GetGrandParent(x)->right : GetGrandParent(x)->left) : nil)
 
