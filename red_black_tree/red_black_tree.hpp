@@ -57,8 +57,12 @@ class Node {
     }
     return max;
   }
-  static pointer getSuccessor(pointer x) {
-    if (x->right != nil) return getMinimum(x->right);
+
+    static pointer getSuccessor(pointer x) {
+    if (IsNil(x))
+      return (x);
+    else if (x->right != nil)
+      return getMinimum(x->right);
     pointer y = x->parent;
     while (y != nil && y->right == x) {
       x = y;
@@ -68,7 +72,10 @@ class Node {
   }
 
   static pointer getPredecessor(pointer x) {
-    if (x->left != nil) return getMaximum(x->left);
+    if (IsNil(x))
+      return x;
+    else if (x->left != nil)
+      return getMaximum(x->left);
 
     pointer y = x->parent;
 
