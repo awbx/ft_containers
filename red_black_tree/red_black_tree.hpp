@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <iostream>
 
+#include "pair.hpp"
 #include "rbt_iterator.hpp"
 #include "reverse_iterator.hpp"
 
@@ -232,7 +233,7 @@ class RedBlackTree {
 
   // red black tree functions
 
-  pointer insert(const value_type &val) {
+  ft::pair<bool, pointer> insert(const value_type &val) {
     pointer z = this->_alloc.allocate(1);
     this->_alloc.construct(z, val);
 
@@ -252,8 +253,10 @@ class RedBlackTree {
       this->_root = z;
     else if (this->_comp(z->data, y->data))
       y->left = z;
-    else
+    else if (this->_comp(y->data, z->data))
       y->right = z;
+    else
+      return ft::make_pair(false, y);
 
     // set z parent
     z->parent = y;
@@ -261,7 +264,7 @@ class RedBlackTree {
     this->insertFixUp(z);
     // increase the size of tree
     this->_size++;
-    return z;
+    return ft::make_pair(true, z);
   }
   void insertFixUp(pointer z) {
     this->unset_end();
