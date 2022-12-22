@@ -106,6 +106,26 @@ class Node {
     return tmp;
   }
 
+  static bool setParent(pointer u, pointer v) {
+    if (GetParent(u)) return u->parent = v, true;
+    return false;
+  }
+
+  static bool changeParent(pointer u, pointer v) {
+    if (!IsNil(u) && !IsNil(v)) return (u->parent = v->parent), true;
+    return false;
+  }
+
+  static bool changeLeft(pointer u, pointer v) {
+    if (!IsNil(u) && !IsNil(v)) return (u->left = v->left), true;
+    return false;
+  }
+
+  static bool changeRight(pointer u, pointer v) {
+    if (!IsNil(u) && !IsNil(v)) return (u->right = v->right), true;
+    return false;
+  }
+
   static void label(pointer node, int &id) {
     std::cout << "\tNode" << id << "[label=\"" << (node ? std::to_string(node->data) : "NIL") << "\""
               << ", fillcolor=\"" << (IsRed(node) ? "red" : "black") << "\""
@@ -294,6 +314,65 @@ class RedBlackTree {
     this->_root->color = black;
     this->set_end();
   };
+
+  void transplant(pointer u, pointer v) {
+    if (IsNil(GetParent(u)))
+      this->_root = v;
+    else if (IsLeftChild(u))
+      GetParent(u)->left = v;
+    else
+      GetParent(u)->right = v;
+    node_type::changeParent(v, u);
+  }
+
+  bool deleteNode(const value_type &val) {
+    this->unset_end();
+    pointer z = this->find(val);
+    if (IsNil(z)) return false;
+
+    pointer y = z;
+
+    pointer x = nil;
+
+    bool original_color = y->color;
+
+    if (IsNil(z->left))  // start of case 1
+    {
+      x = z->right;
+      this->transplant(z, x);
+    }                          // end of case 1
+    else if (IsNil(z->right))  // start of case 2
+    {
+      x = z->left;
+      this->transplant(z, x);
+    }     // end of case 2
+    else  // start of case 3
+    {
+      y = node_type::getMinimum(z->right);
+      original_color = y->color;
+      x = y->right;
+
+      if (GetParent(y) == z)
+        node_type::setParent(x, y);
+      else {
+        this->transplant(y, y->right);
+        node_type::changeRight(y, z);
+        node_type::setParent(y->right, y);
+      }
+      this->transplant(z, y);
+      node_type::changeLeft(y, z);
+      node_type::setParent(y->left, y);
+      y->color = z->color;
+    }  // end of case 3
+
+    this->_alloc.destroy(z);
+    this->_alloc.deallocate(z, 1);
+    this->_size--;
+    // if (original_color == black)
+    // this->deleteFixUp(x);
+    this->set_end();
+    return true;
+  }
 
   // find
   pointer find(const value_type &val) { return node_type::template find<key_compare>(this->_root, val, this->_comp); }
