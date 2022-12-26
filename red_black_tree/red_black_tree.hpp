@@ -425,44 +425,47 @@ class RedBlackTree {
 
   pointer getMaximum(void) const { return node_type::getMaximum(this->_root); }
 
-  pointer leftRotate(pointer x) {
-    if (IsNil(x) || IsNil(x->right)) return nil;
+  void rotate(pointer node, short side) {
+    if (side == LEFT_SIDE)
+      this->leftRotate(node);
+    else
+      this->rightRotate(node);
+  }
+
+  void leftRotate(pointer x) {
     pointer y = x->right;
     x->right = y->left;
-    if (!IsNil(y->left)) {
+    if (y->left != this->_nil) {
       y->left->parent = x;
     }
-    y->parent = GetParent(x);
-    if (IsNil(x->parent)) {
+    y->parent = x->parent;
+    if (x->parent == nullptr) {
       this->_root = y;
-    } else if (IsLeftChild(x)) {
+    } else if (x == x->parent->left) {
       x->parent->left = y;
     } else {
       x->parent->right = y;
     }
     y->left = x;
     x->parent = y;
-    return y;
   }
 
-  pointer rightRotate(pointer x) {
-    if (IsNil(x) && IsNil(x->left)) return nil;
+  void rightRotate(pointer x) {
     pointer y = x->left;
     x->left = y->right;
-    if (!IsNil(y->right)) {
+    if (y->right != this->_nil) {
       y->right->parent = x;
     }
-    y->parent = GetParent(x);
-    if (IsNil(x->parent)) {
+    y->parent = x->parent;
+    if (x->parent == nullptr) {
       this->_root = y;
-    } else if (x == GetParent(x)->right) {
+    } else if (x == x->parent->right) {
       x->parent->right = y;
     } else {
       x->parent->left = y;
     }
     y->right = x;
     x->parent = y;
-    return y;
   }
   void dump_dot() const {
     int id = 1;
