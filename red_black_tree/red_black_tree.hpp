@@ -190,12 +190,19 @@ class RedBlackTree {
   key_compare _comp;
 
   pointer _end;
+  pointer _nil;
 
  public:
   // The default constructor creates an empty container, with no elements.
-  RedBlackTree() : _root(nil), _size(0) {
+  RedBlackTree() : _size(0) {
     this->_end = this->_alloc.allocate(1);
     this->_alloc.construct(this->_end, value_type());
+
+    this->_nil = this->_alloc.allocate(1);
+    this->_alloc.construct(this->_nil, value_type());
+    this->_nil->color = black;
+
+    this->_root = this->_nil;
   };
 
   // capacity functions
