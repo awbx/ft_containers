@@ -106,15 +106,17 @@ class Node {
     return tmp;
   }
 
-  static bool setParent(pointer u, pointer v) {
-    if (GetParent(u)) return u->parent = v, true;
-    return false;
-  }
+  pointer getSide(short side) const { return side == LEFT_SIDE ? this->left : this->right; }
+  pointer getParent(void) const { return this->parent; }
+  pointer getGrandParent(void) const { return this->getParent()->getParent(); }
+  pointer getSibling(void) const { return this->isLeftChild() ? this->getParent()->right : this->isRightChild() ? this->getParent()->left : nullptr; }
+  pointer getUncle(void) const { return this->getGrandParent() ? (this->getParent()->isLeftChild() ? this->getGrandParent()->right : this->getGrandParent()->left) : nullptr; }
 
-  static bool changeParent(pointer u, pointer v) {
-    if (!IsNil(u) && !IsNil(v)) return (u->parent = v->parent), true;
-    return false;
-  }
+  bool isLeftChild(void) const { return this->getParent() && this == this->getParent()->left; }
+  bool isRightChild(void) const { return this->getParent() && this == this->getParent()->right; }
+  bool isRed(void) const { return this->color == red; }
+  bool isBlack(void) const { return this->color == black; }
+  bool isNil(void) const { return this != nullptr && this->left == nullptr && this->right == nullptr; }
 
   static bool changeLeft(pointer u, pointer v) {
     if (!IsNil(u) && !IsNil(v)) return (u->left = v->left), true;
@@ -333,22 +335,22 @@ class RedBlackTree {
   }
 
   bool deleteNode(const value_type &val) {
-    this->unset_end();
     pointer z = this->find(val);
-    if (IsNil(z)) return false;
+    if (z->isNil()) return false;
 
+    this->unset_end();
     pointer y = z;
 
-    pointer x = nil;
+    pointer x = nullptr;
 
     bool original_color = y->color;
 
-    if (IsNil(z->left))  // start of case 1
+    if (z->left->isNil())  // start of case 1
     {
       x = z->right;
       this->transplant(z, x);
-    }                          // end of case 1
-    else if (IsNil(z->right))  // start of case 2
+    }                            // end of case 1
+    else if (z->right->isNil())  // start of case 2
     {
       x = z->left;
       this->transplant(z, x);
@@ -359,26 +361,60 @@ class RedBlackTree {
       original_color = y->color;
       x = y->right;
 
-      if (GetParent(y) == z)
-        node_type::setParent(x, y);
+      if (y->getParent() == z)
+        x->parent = y;
       else {
         this->transplant(y, y->right);
-        node_type::changeRight(y, z);
-        node_type::setParent(y->right, y);
+        y->right = z->right;
+        y->right->parent = y;
       }
       this->transplant(z, y);
-      node_type::changeLeft(y, z);
-      node_type::setParent(y->left, y);
+      y->left = z->left;
+      y->left->parent = y;
       y->color = z->color;
     }  // end of case 3
 
     this->_alloc.destroy(z);
     this->_alloc.deallocate(z, 1);
     this->_size--;
-    // if (original_color == black)
-    // this->deleteFixUp(x);
+    if (original_color == black) this->deleteFixUp(x);
     this->set_end();
     return true;
+  }
+
+  void deleteFixUp(pointer x) {
+    pointer w;
+    while (x != this->_root && x->color == black) {
+      short side = x->isLeftChild() ? LEFT_SIDE : RIGHT_SIDE;
+      w = x->getSibling();
+      if (w->color == red) {  // case 1
+        w->color = black;
+        x->parent->color = red;
+        this->rotate(x->parent, side);
+        w = x->getSibling();  // end of case 1
+      }
+
+      if (w->left->color == black && w->right->color == black) {  // case 2
+        w->color = red;
+        x = x->getParent();  // end of case 2
+      } else {
+        if (w->getSide(!side)->color == black) {  // case 3
+          w->getSide(side)->color = black;
+          w->color = red;
+          this->rotate(w, !side);
+          w = x->getSibling();
+        }
+        w->color = x->parent->color;  // case 4
+        x->parent->color = black;
+        if (side == LEFT_SIDE)
+          w->right->color = black;
+        else
+          w->left->color = black;
+        this->rotate(x->parent, side);
+        x = this->_root;  // end of case 4
+      }
+    }
+    x->color = black;
   }
 
   // find
