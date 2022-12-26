@@ -325,13 +325,14 @@ class RedBlackTree {
   };
 
   void transplant(pointer u, pointer v) {
-    if (IsNil(GetParent(u)))
+    if (u->parent == nullptr) {
       this->_root = v;
-    else if (IsLeftChild(u))
-      GetParent(u)->left = v;
-    else
-      GetParent(u)->right = v;
-    node_type::changeParent(v, u);
+    } else if (u == u->parent->left) {
+      u->parent->left = v;
+    } else {
+      u->parent->right = v;
+    }
+    v->parent = u->parent;
   }
 
   bool deleteNode(const value_type &val) {
