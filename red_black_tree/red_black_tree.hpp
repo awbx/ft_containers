@@ -263,14 +263,17 @@ class RedBlackTree {
   // red black tree functions
 
   ft::pair<bool, pointer> insert(const value_type &val) {
-    pointer z = this->_alloc.allocate(1);
+    pointer z = this->_alloc.allocate(red);
     this->_alloc.construct(z, val);
+    this->_size++;
 
-    pointer y = nil;
+    z->left = this->_nil;
+    z->right = this->_nil;
+    pointer y = nullptr;
     pointer x = this->_root;
 
     // find the right position to put z
-    while (!IsNil(x)) {
+    while (!x->isNil()) {
       y = x;  // track the parent
       if (this->_comp(z->data, x->data))
         x = x->left;
@@ -278,51 +281,47 @@ class RedBlackTree {
         x = x->right;
     }
 
-    if (IsNil(y))
-      this->_root = z;
-    else if (this->_comp(z->data, y->data))
-      y->left = z;
-    else if (this->_comp(y->data, z->data))
-      y->right = z;
-    else
-      return ft::make_pair(false, y);
-
-    // set z parent
     z->parent = y;
+    if (y == nullptr) {
+      this->_root = z;
+    } else if (z->data < y->data) {
+      y->left = z;
+    } else {
+      y->right = z;
+    }
 
-    this->insertFixUp(z);
-    // increase the size of tree
-    this->_size++;
+    if (z->parent == nullptr) {
+      z->color = black;
+    } else if (z->parent->parent != nullptr) {
+      this->unset_end();
+      this->insertFixUp(z);
+      this->set_end();
+    }
     return ft::make_pair(true, z);
   }
-  void insertFixUp(pointer z) {
-    this->unset_end();
-    while (IsRed(GetParent(z))) {
-      pointer uncle = GetUncle(z);
 
-      if (IsRed(uncle)) {  // start of case 1
-        ReColor(GetParent(z));
-        ReColor(GetGrandParent(z));
-        ReColor(uncle);
-        z = GetGrandParent(z);                                    // end of case 1
-      } else if (IsRightChild(z) && IsLeftChild(GetParent(z))) {  // start of case 2
-        z = GetParent(z);
-        this->leftRotate(z);
-      } else if (IsLeftChild(z) && IsRightChild(GetParent(z))) {
-        z = GetParent(z);
-        this->rightRotate(z);  // end of case 2
+  void insertFixUp(pointer x) {
+    pointer w;
+    while (x != this->_root && x->parent->isRed()) {
+      short side = x->getParent()->isRightChild() ? RIGHT_SIDE : LEFT_SIDE;
+      w = x->getUncle();
+      if (w->isRed()) {
+        w->color = black;
+        x->parent->color = black;
+        x->getGrandParent()->color = red;
+        x = x->getGrandParent();
       } else {
-        ReColor(GetParent(z));  // start of case 3
-        ReColor(GetGrandParent(z));
-        if (IsLeftChild(GetParent(z)))
-          this->rightRotate(GetGrandParent(z));
-        else
-          this->leftRotate(GetGrandParent(z));  // end of case 3
+        if (x == x->parent->getSide(!side)) {
+          x = x->parent;
+          this->rotate(x, side);
+        }
+        x->parent->color = black;
+        x->getGrandParent()->color = red;
+        this->rotate(x->getGrandParent(), !side);
       }
     }
     this->_root->color = black;
-    this->set_end();
-  };
+  }
 
   void transplant(pointer u, pointer v) {
     if (u->parent == nullptr) {
