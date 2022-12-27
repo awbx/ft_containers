@@ -1,27 +1,17 @@
 #ifndef __RED_BLACK_TREE_HPP__
 #define __RED_BLACK_TREE_HPP__
 
-// let's assume that the true value is red & false value is black
+// let's assume that the true value is red & the false value is black
 
 #define red true
 #define black false
-#define nil 0
+#define LEFT_SIDE 0
+#define RIGHT_SIDE 1
 
-#define IsRed(x) ((x) && (x)->color == red)
-#define IsBlack(x) (!IsRed(x))
-#define IsRoot(x) ((x) && (x)->parent == nil)
-#define IsNil(x) ((x) == nil)
-#define IsLeftChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->left)
-#define IsRightChild(x) (!IsNil(x) && (x)->parent && x == (x)->parent->right)
-#define IsChildrenRed(x) (!IsNil(x) && (IsNil(x->left) || IsBlack(x->left)) && (IsNil(x->right) || IsBlack(x->right)))
-#define GetParent(x) (!IsNil(x) ? x->parent : nil)
-#define GetGrandParent(x) (GetParent(GetParent(x)))
-#define GetUncle(x) (GetGrandParent(x) ? (IsLeftChild(GetParent(x)) ? GetGrandParent(x)->right : GetGrandParent(x)->left) : nil)
+#include <fstream>   // Todo: remove this
+#include <iostream>  // Todo : remove this
 
-#define ReColor(x) ((x)->color ^= 1);
-
-#include <iomanip>
-#include <iostream>
+using namespace std;
 
 #include "pair.hpp"
 #include "rbt_iterator.hpp"
@@ -42,7 +32,7 @@ class Node {
   pointer parent;
   bool    color;
 
-  Node(const T &data, pointer parent = nullptr, bool color = true) : data(data), left(nullptr), right(nullptr), parent(parent), color(color) {}
+  Node(const T &data, pointer parent = nullptr, bool color = red) : data(data), left(nullptr), right(nullptr), parent(parent), color(color) {}
 
   static pointer getMinimum(const pointer tree) {
     pointer min = tree;
