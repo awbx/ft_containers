@@ -42,12 +42,12 @@ class Node {
   pointer parent;
   bool    color;
 
-  Node(const T &data, pointer parent = nil, bool color = true) : data(data), left(nil), right(nil), parent(parent), color(color) {}
+  Node(const T &data, pointer parent = nullptr, bool color = true) : data(data), left(nullptr), right(nullptr), parent(parent), color(color) {}
 
   static pointer getMinimum(const pointer tree) {
     pointer min = tree;
 
-    while (min && min->left) {
+    while (!min->left->isNil()) {
       min = min->left;
     }
     return min;
@@ -56,19 +56,16 @@ class Node {
   static pointer getMaximum(const pointer tree) {
     pointer max = tree;
 
-    while (max && max->right) {
+    while (!max->right->isNil()) {
       max = max->right;
     }
     return max;
   }
 
-    static pointer getSuccessor(pointer x) {
-    if (IsNil(x))
-      return (x);
-    else if (x->right != nil)
-      return getMinimum(x->right);
+  static pointer getSuccessor(pointer x) {
+    if (!x->right->isNil()) return getMinimum(x->right);
     pointer y = x->parent;
-    while (y != nil && y->right == x) {
+    while (!y->isNil() && y->right == x) {
       x = y;
       y = y->parent;
     }
@@ -76,14 +73,11 @@ class Node {
   }
 
   static pointer getPredecessor(pointer x) {
-    if (IsNil(x))
-      return x;
-    else if (x->left != nil)
-      return getMaximum(x->left);
+    if (!x->left->isNil()) return getMaximum(x->left);
 
     pointer y = x->parent;
 
-    while (y != nil && y->left == x) {
+    while (!y->isNil() && y->left == x) {
       x = y;
       y = y->parent;
     }
@@ -94,7 +88,7 @@ class Node {
   static pointer find(const pointer tree, const value_type &val, Compare comp = Compare()) {
     pointer tmp = tree;
 
-    while (tmp) {
+    while (!tmp->isNil()) {
       if (comp(val, tmp->data))
         tmp = tmp->left;
       else if (comp(tmp->data, val))
@@ -118,49 +112,41 @@ class Node {
   bool isBlack(void) const { return this->color == black; }
   bool isNil(void) const { return this != nullptr && this->left == nullptr && this->right == nullptr; }
 
-  static bool changeLeft(pointer u, pointer v) {
-    if (!IsNil(u) && !IsNil(v)) return (u->left = v->left), true;
-    return false;
+  static void label(pointer node, int &id, ofstream &stream) {
+    if (!node) return;
+    stream << "\tNode" << id << "[label=\"" << (!node->isNil() ? std::to_string(node->data) : "NIL") << "\""
+           << ", fillcolor=\"" << (node->isRed() ? "red" : "black") << "\""
+           << ", color=\"black\""
+           << ", shape=" << (node->isNil() ? "record" : "circle") << ", fixedsize=true"
+           << ", fontcolor=\"white\""
+           << ", tooltip=\"The parent node is " << (!node->isNil() && node->parent ? std::to_string(node->parent->data) : "nil") << "\""
+           << ", style=filled" << (node->isNil() ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
+  }
+  static void edge(int from, int to, ofstream &stream) {
+    stream << "\tNode" << from << " -> "
+           << "Node" << to << "[wieght=10]\n";
   }
 
-  static bool changeRight(pointer u, pointer v) {
-    if (!IsNil(u) && !IsNil(v)) return (u->right = v->right), true;
-    return false;
-  }
-
-  static void label(pointer node, int &id) {
-    std::cout << "\tNode" << id << "[label=\"" << (node ? std::to_string(node->data) : "NIL") << "\""
-              << ", fillcolor=\"" << (IsRed(node) ? "red" : "black") << "\""
-              << ", color=\"black\""
-              << ", shape=" << (IsNil(node) ? "record" : "circle") << ", fixedsize=true"
-              << ", fontcolor=\"white\""
-              << ", tooltip=\"The parent node is " << (node && node->parent ? std::to_string(node->parent->data) : "nil") << "\""
-              << ", style=filled" << ((IsNil(node)) ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
-  }
-
-  static void edge(int from, int to) {
-    std::cout << "\tNode" << from << " -> "
-              << "Node" << to << "[wieght=10]\n";
-  }
-
-  static int dfs(pointer tree, int &id) {
+  static int dfs(pointer tree, int &id, ofstream &stream) {
     int my_id, l, r;
     my_id = id++;
-    label(tree, my_id);
+    label(tree, my_id, stream);
     if (tree) {
-      l = dfs(tree->left, id);
-      r = dfs(tree->right, id);
-      edge(my_id, l);
-      edge(my_id, r);
+      l = dfs(tree->left, id, stream);
+      r = dfs(tree->right, id, stream);
+      if (!tree->isNil()) {
+        edge(my_id, l, stream);
+        edge(my_id, r, stream);
+      }
     }
     return my_id;
   }
-  
-  static void dump_dot(pointer tree) {
+
+  static void dump_dot(pointer tree, ofstream &stream) {
     int id = 1;
-    std::cout << "digraph {\n";
-    dfs(tree, id);
-    std::cout << "}\n";
+    stream << "digraph {\n";
+    dfs(tree, id, stream);
+    stream << "}\n";
   }
 };
 
@@ -216,33 +202,35 @@ class RedBlackTree {
 
   ~RedBlackTree() {
     // TODO: deallocate all nodes
-    this->_alloc.destroy(this->_end);
-    this->_alloc.deallocate(this->_end, 1);
+    this->clean(this->_end, true);
     this->clean(this->_root);
+    this->clean(this->_nil, true);
   };
 
-  void clean(pointer node) {
-    if (IsNil(node)) return;
+  void clean(pointer node, bool deleteOne = false) {
+    if (node->isNil()) return;
 
     pointer left = node->left;
     pointer right = node->right;
     this->_alloc.destroy(node);
     this->_alloc.deallocate(node, 1);
-    clean(left);
-    clean(right);
-  }
-  // set & unset the _end
-  void set_end(void) {
-    if (!IsNil(this->_root)) {
-      this->_root->parent = this->_end;
-      this->_end->left = this->_root;
+    if (!deleteOne) {
+      clean(left);
+      clean(right);
     }
   }
 
   void unset_end(void) {
-    if (!IsNil(this->_root)) {
-      _root->parent = nil;
-      this->_end->left = nil;
+    if (!this->_root->isNil()) {
+      this->_root->parent = nullptr;
+      this->_end->left = nullptr;
+    }
+  }
+
+  void set_end(void) {
+    if (!this->_root->isNil()) {
+      this->_root->parent = this->_end;
+      this->_end->left = this->_root;
     }
   }
 
@@ -326,7 +314,7 @@ class RedBlackTree {
   void transplant(pointer u, pointer v) {
     if (u->parent == nullptr) {
       this->_root = v;
-    } else if (u == u->parent->left) {
+    } else if (u->isLeftChild()) {
       u->parent->left = v;
     } else {
       u->parent->right = v;
@@ -440,7 +428,7 @@ class RedBlackTree {
     y->parent = x->parent;
     if (x->parent == nullptr) {
       this->_root = y;
-    } else if (x == x->parent->left) {
+    } else if (x->isLeftChild()) {
       x->parent->left = y;
     } else {
       x->parent->right = y;
@@ -458,7 +446,7 @@ class RedBlackTree {
     y->parent = x->parent;
     if (x->parent == nullptr) {
       this->_root = y;
-    } else if (x == x->parent->right) {
+    } else if (x->isRightChild()) {
       x->parent->right = y;
     } else {
       x->parent->left = y;
