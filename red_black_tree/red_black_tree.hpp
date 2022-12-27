@@ -54,6 +54,7 @@ class Node {
 
   static pointer getSuccessor(pointer x) {
     if (!x->right->isNil()) return getMinimum(x->right);
+
     pointer y = x->parent;
     while (!y->isNil() && y->right == x) {
       x = y;
@@ -66,7 +67,6 @@ class Node {
     if (!x->left->isNil()) return getMaximum(x->left);
 
     pointer y = x->parent;
-
     while (!y->isNil() && y->left == x) {
       x = y;
       y = y->parent;
