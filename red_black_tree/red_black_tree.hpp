@@ -112,7 +112,7 @@ class Node {
   bool isBlack(void) const { return this->color == black; }
   bool isNil(void) const { return this != nullptr && this->left == nullptr && this->right == nullptr; }
 
-  static void label(pointer node, int &id, ofstream &stream) {
+  static void label(pointer node, int &id, ostream &stream) {
     if (!node) return;
     stream << "\tNode" << id << "[label=\"" << (!node->isNil() ? std::to_string(node->data) : "NIL") << "\""
            << ", fillcolor=\"" << (node->isRed() ? "red" : "black") << "\""
@@ -122,12 +122,12 @@ class Node {
            << ", tooltip=\"The parent node is " << (!node->isNil() && node->parent ? std::to_string(node->parent->data) : "nil") << "\""
            << ", style=filled" << (node->isNil() ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
   }
-  static void edge(int from, int to, ofstream &stream) {
+  static void edge(int from, int to, ostream &stream) {
     stream << "\tNode" << from << " -> "
            << "Node" << to << "[wieght=10]\n";
   }
 
-  static int dfs(pointer tree, int &id, ofstream &stream) {
+  static int dfs(pointer tree, int &id, ostream &stream) {
     int my_id, l, r;
     my_id = id++;
     label(tree, my_id, stream);
@@ -142,7 +142,7 @@ class Node {
     return my_id;
   }
 
-  static void dump_dot(pointer tree, ofstream &stream) {
+  static void dump_dot(pointer tree, ostream &stream) {
     int id = 1;
     stream << "digraph {\n";
     dfs(tree, id, stream);
