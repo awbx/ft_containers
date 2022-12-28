@@ -2,7 +2,7 @@ NAME=ft_containers
 
 CC=c++
 
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g 
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
 
 HEADERS = utils/equal.hpp\
 	utils/iterator_traits.hpp\
@@ -22,7 +22,8 @@ HEADERS = utils/equal.hpp\
 
 TEST_FILES = tests/tests.cpp\
 	stack/stack_tests.cpp\
-	vector/vector_tests.cpp
+	vector/vector_tests.cpp\
+	map/map_tests.cpp
 
 TEST_OBJS = $(TEST_FILES:%.cpp=%.o)
 
