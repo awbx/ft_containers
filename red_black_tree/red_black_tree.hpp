@@ -171,7 +171,9 @@ class RedBlackTree {
 
  public:
   // The default constructor creates an empty container, with no elements.
-  RedBlackTree(const Compare &comp) : _size(0), _comp(comp) {
+  RedBlackTree(const Compare &comp) : _size(0), _comp(comp) { this->init(); };
+
+  void init(void) {
     this->_end = this->_alloc.allocate(1);
     this->_alloc.construct(this->_end, value_type());
 
@@ -180,14 +182,25 @@ class RedBlackTree {
     this->_nil->color = black;
 
     this->_root = this->_nil;
-  };
+  }
 
-  // capacity functions
-  bool      empty() const { return !this->size(); }
-  size_type size() const { return this->_size; }
-  size_type max_size() const { return this->_alloc.max_size(); }
+  RedBlackTree(const RedBlackTree &copy) : _comp(copy._comp) {
+    this->init();
+    *this = copy;
+  }
 
-  allocator_type get_allocator() const { return this->_alloc; }
+  RedBlackTree &operator=(const RedBlackTree &rhs) {
+    if (this != &rhs) {
+      this->clear();
+
+      iterator it = rhs.begin();
+      while (it != rhs.end()) {
+        this->insert(*it);
+        it++;
+      }
+    }
+    return *this;
+  }
 
   ~RedBlackTree() {
     // TODO: deallocate all nodes
@@ -196,6 +209,12 @@ class RedBlackTree {
     this->clearNode(this->_nil, true);
   };
 
+  // capacity functions
+  bool      empty() const { return !this->size(); }
+  size_type size() const { return this->_size; }
+  size_type max_size() const { return this->_alloc.max_size(); }
+
+  allocator_type get_allocator() const { return this->_alloc; }
   void clear() {
     this->clearNode(this->_root);
     this->_root = this->_nil;
