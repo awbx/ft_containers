@@ -104,12 +104,12 @@ class Node {
 
   static void label(pointer node, int &id, ostream &stream) {
     if (!node) return;
-    stream << "\tNode" << id << "[label=\"" << (!node->isNil() ? std::to_string(node->data) : "NIL") << "\""
+    stream << "\tNode" << id << "[label=\"" << node << "\""
            << ", fillcolor=\"" << (node->isRed() ? "red" : "black") << "\""
            << ", color=\"black\""
            << ", shape=" << (node->isNil() ? "record" : "circle") << ", fixedsize=true"
            << ", fontcolor=\"white\""
-           << ", tooltip=\"The parent node is " << (!node->isNil() && node->parent ? std::to_string(node->parent->data) : "nil") << "\""
+           << ", tooltip=\"The parent node is " << node->parent << "\""
            << ", style=filled" << (node->isNil() ? ", width=0.3, height=0.2, fontsize=10" : ", fontsize=20") << "]\n";
   }
   static void edge(int from, int to, ostream &stream) {
@@ -139,6 +139,21 @@ class Node {
     stream << "}\n";
   }
 };
+
+template <typename U, typename V>
+std::ostream &operator<<(std::ostream &stream, ft::pair<U, V> pr) {
+  stream << pr.first;
+  return stream;
+}
+
+template <typename T>
+std::ostream &operator<<(std::ostream &stream, Node<T> *node) {
+  if (node && !node->isNil())
+    stream << node->data;
+  else
+    stream << "NIL";
+  return stream;
+}
 
 template <typename T, typename Compare, typename Alloc>
 class RedBlackTree {
@@ -215,6 +230,7 @@ class RedBlackTree {
   size_type max_size() const { return this->_alloc.max_size(); }
 
   allocator_type get_allocator() const { return this->_alloc; }
+
   void clear() {
     this->clearNode(this->_root);
     this->_root = this->_nil;
@@ -532,6 +548,7 @@ class RedBlackTree {
     return const_iterator(iter);
   }
 
+  void test(void) const { node_type::dump_dot(this->_root, cout); }
 };
 }  // namespace ft
 
