@@ -24,6 +24,7 @@ class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
  private:
   typedef ft::Node<T> node_type;
   typedef node_type  *node_pointer;
+  typedef const node_pointer const_node_pointer;
   node_pointer        tree;
 
   // private member functions
@@ -32,7 +33,7 @@ class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
  public:
   // member functions
 
-  explicit tree_iterator(node_pointer root) : tree(root){};
+  explicit tree_iterator(const_node_pointer root) : tree(root){};
 
   tree_iterator(tree_iterator const &vector_iter) : tree(vector_iter.base()) {}
 
