@@ -227,16 +227,16 @@ class RedBlackTree {
   // iterator
 
   iterator       begin() { return iterator(this->size() ? this->getMinimum() : this->_end); }
-  const_iterator begin() const { return iterator(this->size() ? this->getMinimum() : this->_end); }
+  const_iterator begin() const { return const_iterator(this->size() ? this->getMinimum() : this->_end); }
 
   iterator       end() { return iterator(this->_end); }
-  const_iterator end() const { return iterator(this->_end); }
+  const_iterator end() const { return const_iterator(this->_end); }
 
   reverse_iterator       rbegin() { return reverse_iterator(this->end()); }
-  const_reverse_iterator rbegin() const { return reverse_iterator(this->end()); }
+  const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
 
   reverse_iterator       rend() { return reverse_iterator(this->begin()); }
-  const_reverse_iterator rend() const { return reverse_iterator(this->begin()); }
+  const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
 
   // red black tree functions
 
