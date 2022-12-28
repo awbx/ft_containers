@@ -17,7 +17,8 @@ HEADERS = utils/equal.hpp\
 	tests/tests.hpp\
 	red_black_tree/red_black_tree.hpp\
 	red_black_tree/rbt_iterator.hpp\
-	map/map.hpp
+	map/map.hpp\
+	set/set.hpp
 
 TEST_FILES = tests/tests.cpp\
 	stack/stack_tests.cpp\
@@ -26,7 +27,7 @@ TEST_FILES = tests/tests.cpp\
 TEST_OBJS = $(TEST_FILES:%.cpp=%.o)
 
 
-INCLUDES = -I utils -I vector -I stack -I tests -I red_black_tree -I map
+INCLUDES = -I utils -I vector -I stack -I tests -I red_black_tree -I map -I set
 
 SRC_FILES = ft_container.cpp
 
