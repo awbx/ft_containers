@@ -192,12 +192,18 @@ class RedBlackTree {
 
   ~RedBlackTree() {
     // TODO: deallocate all nodes
-    this->clean(this->_end, true);
-    this->clean(this->_root);
-    this->clean(this->_nil, true);
+    this->clearNode(this->_end, true);
+    if (this->size()) this->clearNode(this->_root);
+    this->clearNode(this->_nil, true);
   };
 
-  void clean(pointer node, bool deleteOne = false) {
+  void clear() {
+    this->clearNode(this->_root);
+    this->_root = this->_nil;
+    this->_size = 0;
+  }
+
+  void clearNode(pointer node, bool deleteOne = false) {
     if (node->isNil()) return;
 
     pointer left = node->left;
@@ -205,8 +211,8 @@ class RedBlackTree {
     this->_alloc.destroy(node);
     this->_alloc.deallocate(node, 1);
     if (!deleteOne) {
-      clean(left);
-      clean(right);
+      clearNode(left, deleteOne);
+      clearNode(right, deleteOne);
     }
   }
 
