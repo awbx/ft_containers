@@ -22,16 +22,18 @@ class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
   // Todo: add category type
 
  private:
-  typedef ft::Node<T> node_type;
-  typedef node_type  *node_pointer;
+  typedef ft::Node<T>        node_type;
+  typedef node_type         *node_pointer;
   typedef const node_pointer const_node_pointer;
-  node_pointer        tree;
+  node_pointer               tree;
 
   // private member functions
   node_pointer base() const { return this->tree; }
 
  public:
   // member functions
+
+  tree_iterator() : tree(nullptr) {}
 
   explicit tree_iterator(const_node_pointer root) : tree(root){};
 
