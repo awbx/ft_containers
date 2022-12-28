@@ -146,7 +146,6 @@ class RedBlackTree {
   // member types
   typedef T                                                          value_type;
   typedef Node<value_type>                                           node_type;
-  typedef Compare                                                    key_compare;
   typedef Alloc                                                      allocator_type;
   typedef typename allocator_type::template rebind<node_type>::other node_alloc;
   typedef RedBlackTree<value_type, Compare, node_alloc>              tree;
@@ -155,7 +154,7 @@ class RedBlackTree {
   typedef typename node_alloc::pointer                               pointer;
   typedef typename node_alloc::const_pointer                         const_pointer;
   typedef ft::tree_iterator<value_type>                              iterator;
-  typedef ft::tree_iterator<const value_type>                        const_iterator;
+  typedef const ft::tree_iterator<value_type>                        const_iterator;
   typedef ft::reverse_iterator<iterator>                             reverse_iterator;
   typedef ft::reverse_iterator<const_iterator>                       const_reverse_iterator;
   typedef typename node_alloc::difference_type                       difference_type;
@@ -247,10 +246,9 @@ class RedBlackTree {
   // red black tree functions
 
   ft::pair<bool, pointer> insert(const value_type &val) {
+    this->unset_end();
     pointer z = this->_alloc.allocate(red);
     this->_alloc.construct(z, val);
-    this->_size++;
-
     z->left = this->_nil;
     z->right = this->_nil;
     pointer y = nullptr;
@@ -273,15 +271,15 @@ class RedBlackTree {
     } else if (this->_comp(y->data, z->data)) {
       y->right = z;
     } else
-      return ft::make_pair(false, y);
+      return this->set_end(), ft::make_pair(false, y);
 
     if (z->parent == nullptr) {
       z->color = black;
     } else if (z->parent->parent != nullptr) {
-      this->unset_end();
       this->insertFixUp(z);
-      this->set_end();
     }
+    this->_size++;
+    this->set_end();
     return ft::make_pair(true, z);
   }
 
