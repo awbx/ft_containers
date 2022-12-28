@@ -443,7 +443,7 @@ class RedBlackTree {
   }
 
   // find
-  pointer find(const value_type &val) { return node_type::template find<Compare>(this->_root, val, this->_comp); }
+  pointer find(const value_type &val) const { return node_type::template find<Compare>(this->_root, val, this->_comp); }
 
   pointer getMinimum(void) const { return node_type::getMinimum(this->_root); }
 
