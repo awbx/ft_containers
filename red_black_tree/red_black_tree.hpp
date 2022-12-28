@@ -149,7 +149,7 @@ class RedBlackTree {
   typedef Compare                                                    key_compare;
   typedef Alloc                                                      allocator_type;
   typedef typename allocator_type::template rebind<node_type>::other node_alloc;
-  typedef RedBlackTree<value_type, key_compare, node_alloc>          tree;
+  typedef RedBlackTree<value_type, Compare, node_alloc>              tree;
   typedef typename node_alloc::reference                             reference;
   typedef typename node_alloc::const_reference                       const_reference;
   typedef typename node_alloc::pointer                               pointer;
@@ -162,17 +162,17 @@ class RedBlackTree {
   typedef typename node_alloc::size_type                             size_type;
 
  private:
-  pointer     _root;
-  size_type   _size;
-  node_alloc  _alloc;
-  key_compare _comp;
+  pointer    _root;
+  size_type  _size;
+  node_alloc _alloc;
+  Compare    _comp;
 
   pointer _end;
   pointer _nil;
 
  public:
   // The default constructor creates an empty container, with no elements.
-  RedBlackTree() : _size(0) {
+  RedBlackTree(const Compare &comp) : _size(0), _comp(comp) {
     this->_end = this->_alloc.allocate(1);
     this->_alloc.construct(this->_end, value_type());
 
@@ -262,11 +262,12 @@ class RedBlackTree {
     z->parent = y;
     if (y == nullptr) {
       this->_root = z;
-    } else if (z->data < y->data) {
+    } else if (this->_comp(z->data, y->data)) {
       y->left = z;
-    } else {
+    } else if (this->_comp(y->data, z->data)) {
       y->right = z;
-    }
+    } else
+      return ft::make_pair(false, y);
 
     if (z->parent == nullptr) {
       z->color = black;
@@ -396,7 +397,7 @@ class RedBlackTree {
   }
 
   // find
-  pointer find(const value_type &val) { return node_type::template find<key_compare>(this->_root, val, this->_comp); }
+  pointer find(const value_type &val) { return node_type::template find<Compare>(this->_root, val, this->_comp); }
 
   pointer getMinimum(void) const { return node_type::getMinimum(this->_root); }
 
@@ -443,12 +444,6 @@ class RedBlackTree {
     }
     y->right = x;
     x->parent = y;
-  }
-  void dump_dot() const {
-    int id = 1;
-    std::cout << "digraph {\n";
-    dfs(this->_root, id);
-    std::cout << "}\n";
   }
 };
 }  // namespace ft
