@@ -73,11 +73,11 @@ class set {
   iterator       end() { return tree.end(); };
   const_iterator end() const { return tree.end(); };
 
-  iterator       rbegin() { return tree.rbegin(); };
-  const_iterator rbegin() const { return tree.rbegin(); };
+  reverse_iterator       rbegin() { return reverse_iterator(this->end()); }
+  const_reverse_iterator rbegin() const { return const_reverse_iterator(this->end()); }
 
-  iterator       rend() { return tree.rend(); };
-  const_iterator rend() const { return tree.rend(); };
+  reverse_iterator       rend() { return reverse_iterator(this->begin()); }
+  const_reverse_iterator rend() const { return const_reverse_iterator(this->begin()); }
 
   // Capacity
   bool      empty() const { return tree.empty(); }
