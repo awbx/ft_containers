@@ -10,6 +10,7 @@
 #if FT
 namespace ft = std;
 #else
+#include "vector.hpp"
 #include "stack.hpp"  // ft::stack
 
 #endif
