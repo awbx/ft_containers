@@ -53,10 +53,10 @@ class map {
   }
 
   // the copy constructor
-  map(const map& x) {
+  map(const map& x) : tree(x.tree), _value_comp(x._value_comp) {
     this->_alloc = x._alloc;
-    this->_comp = x._comp;
-    this->tree = x.tree;
+    this->_key_comp = x._key_comp;
+    this->_value_comp = x._value_comp;
   }
 
   // copy assignment operator
