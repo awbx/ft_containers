@@ -265,14 +265,14 @@ class RedBlackTree {
   // red black tree functions
 
   ft::pair<bool, pointer> insertUnique(const value_type &val) {
-    pointer exist = this->find(val);  // idea -> improve find function to return pair of bool & pointer
-    if (!exist->isNil()) return ft::make_pair(false, exist);
+    pointer exists = this->find(val);  // idea -> improve find function to return pair of bool & pointer
+    if (!exists->isNil()) return ft::make_pair(false, exists);
 
     return ft::make_pair(true, this->insert(val));
   }
 
   pointer insert(const value_type &val) {
-    // check if the val already exist !
+    // check if the val already exists !
     this->unset_end();
     pointer z = this->_alloc.allocate(red);
     this->_alloc.construct(z, val);
