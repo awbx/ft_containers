@@ -456,6 +456,63 @@ class RedBlackTree {
     y->right = x;
     x->parent = y;
   }
+
+  iterator lower_bound(const value_type &k) {
+    pointer node = this->_root;
+
+    iterator iter = this->end();
+
+    while (!node->isNil()) {
+      if (!this->_comp(node->data, k)) {
+        iter = iterator(node);
+        node = node->left;
+      } else
+        node = node->right;
+    }
+    return iterator(iter);
+  }
+  const_iterator lower_bound(const value_type &k) const {
+    pointer node = this->_root;
+
+    iterator iter = this->end();
+
+    while (!node->isNil()) {
+      if (!this->_comp(node->data, k)) {
+        iter = iterator(node);
+        node = node->left;
+      } else
+        node = node->right;
+    }
+    return const_iterator(iter);
+  }
+
+  iterator upper_bound(const value_type &k) {
+    pointer  node = this->_root;
+    iterator iter = this->end();
+
+    while (!node->isNil()) {
+      if (this->_comp(k, node->data)) {
+        iter = iterator(node);
+        node = node->left;
+      } else
+        node = node->right;
+    }
+    return iterator(iter);
+  }
+  const_iterator upper_bound(const value_type &k) const {
+    pointer  node = this->_root;
+    iterator iter = this->end();
+
+    while (!node->isNil()) {
+      if (this->_comp(k, node->data)) {
+        iter = iterator(node);
+        node = node->left;
+      } else
+        node = node->right;
+    }
+    return const_iterator(iter);
+  }
+
 };
 }  // namespace ft
 
