@@ -2,7 +2,7 @@ NAME=ft_containers
 
 CC=c++
 
-CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g
+CFLAGS = -Wall -Werror -Wextra -std=c++98 -fsanitize=address -g -D FT
 
 HEADERS = utils/equal.hpp\
 	utils/iterator_traits.hpp\
