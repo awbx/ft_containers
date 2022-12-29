@@ -8,9 +8,6 @@
 #define LEFT_SIDE 0
 #define RIGHT_SIDE 1
 
-#include <fstream>   // Todo: remove this
-#include <iostream>  // Todo : remove this
-
 using namespace std;
 
 #include "pair.hpp"
@@ -218,8 +215,7 @@ class RedBlackTree {
     return *this;
   }
 
-  ~RedBlackTree() {
-    // TODO: deallocate all nodes
+  virtual ~RedBlackTree() {
     this->clearNode(this->_end, true);
     if (this->size()) this->clearNode(this->_root);
     this->clearNode(this->_nil, true);
