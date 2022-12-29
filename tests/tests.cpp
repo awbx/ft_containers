@@ -7,7 +7,7 @@ void start_test(const char *test_name, void (*func)(void)) {
 }
 
 int main() {
-  // stack_main();
-  // vector_main();
-  //   map_main();
+  stack_main();
+  vector_main();
+  map_main();
 }

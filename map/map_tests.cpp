@@ -48,21 +48,22 @@ static void test_begin_end(void) {
   mymap['a'] = 200;
   mymap['c'] = 300;
 
+  ft::map<char, int> const& mp = mymap;
   // show content:
-  for (ft::map<char, int>::iterator it = mymap.begin(); it != mymap.end(); ++it) std::cout << it->first << " => " << it->second << '\n';
+  for (ft::map<char, int>::const_iterator it = mp.begin(); it != mp.end(); ++it) std::cout << it->first << " => " << it->second << '\n';
 }
 
-// static void test_rbegin_rend(void) {
-//   ft::map<char, int> mymap;
+static void test_rbegin_rend(void) {
+  ft::map<char, int> mymap;
 
-//   mymap['x'] = 100;
-//   mymap['y'] = 200;
-//   mymap['z'] = 300;
+  mymap['x'] = 100;
+  mymap['y'] = 200;
+  mymap['z'] = 300;
 
-//   // show content:
-//   ft::map<char, int>::reverse_iterator rit;
-//   for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit) std::cout << rit->first << " => " << rit->second << '\n';
-// }
+  // show content:
+  ft::map<char, int>::reverse_iterator rit;
+  for (rit = mymap.rbegin(); rit != mymap.rend(); ++rit) std::cout << rit->first << " => " << rit->second << '\n';
+}
 
 static void test_empty(void) {
   ft::map<char, int> mymap;
@@ -204,41 +205,41 @@ static void test_clear(void) {
   for (ft::map<char, int>::iterator it = mymap.begin(); it != mymap.end(); ++it) std::cout << it->first << " => " << it->second << '\n';
 }
 
-// void test_key_comp(void) {
-//   ft::map<char, int> mymap;
+void test_key_comp(void) {
+  ft::map<char, int> mymap;
 
-//   ft::map<char, int>::key_compare mycomp = mymap.key_comp();
+  ft::map<char, int>::key_compare mycomp = mymap.key_comp();
 
-//   mymap['a'] = 100;
-//   mymap['b'] = 200;
-//   mymap['c'] = 300;
+  mymap['a'] = 100;
+  mymap['b'] = 200;
+  mymap['c'] = 300;
 
-//   std::cout << "mymap contains:\n";
+  std::cout << "mymap contains:\n";
 
-//   char highest = mymap.rbegin()->first;  // key value of last element
+  char highest = mymap.rbegin()->first;  // key value of last element
 
-//   ft::map<char, int>::iterator it = mymap.begin();
-//   do {
-//     std::cout << it->first << " => " << it->second << '\n';
-//   } while (mycomp((*it++).first, highest));
-// }
+  ft::map<char, int>::iterator it = mymap.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while (mycomp((*it++).first, highest));
+}
 
-// void test_value_comp(void) {
-//   ft::map<char, int> mymap;
+void test_value_comp(void) {
+  ft::map<char, int> mymap;
 
-//   mymap['x'] = 1001;
-//   mymap['y'] = 2002;
-//   mymap['z'] = 3003;
+  mymap['x'] = 1001;
+  mymap['y'] = 2002;
+  mymap['z'] = 3003;
 
-//   std::cout << "mymap contains:\n";
+  std::cout << "mymap contains:\n";
 
-//   ft::pair<char, int> highest = *mymap.rbegin();  // last element
+  ft::pair<char, int> highest = *mymap.rbegin();  // last element
 
-//   ft::map<char, int>::iterator it = mymap.begin();
-//   do {
-//     std::cout << it->first << " => " << it->second << '\n';
-//   } while (mymap.value_comp()(*it++, highest));
-// }
+  ft::map<char, int>::iterator it = mymap.begin();
+  do {
+    std::cout << it->first << " => " << it->second << '\n';
+  } while (mymap.value_comp()(*it++, highest));
+}
 
 static void test_find(void) {
   ft::map<char, int>           mymap;
@@ -329,12 +330,11 @@ static void test_get_allocator(void) {
 
 // static void test_relational_operators(void) {}
 
-
 void map_main() {
   start_test("Test Constructor", test_constructor);
   start_test("Test Assignment Operator", test_assignment_operator);
   start_test("Test begin, end", test_begin_end);
-  //   start_test("Test rbegin, rend", test_rbegin_rend);
+  start_test("Test rbegin, rend", test_rbegin_rend);
   start_test("Test empty", test_empty);
   start_test("Test size", test_size);
   start_test("Test max_size", test_max_size);
@@ -343,8 +343,8 @@ void map_main() {
   start_test("Test erase", test_erase);
   start_test("Test swap", test_swap);
   start_test("Test clear", test_clear);
-  //   start_test("Test key_comp", test_key_comp);
-  //   start_test("Test value_comp", test_value_comp);
+  start_test("Test key_comp", test_key_comp);
+  start_test("Test value_comp", test_value_comp);
   start_test("Test find", test_find);
   start_test("Test count", test_count);
   start_test("Test lower/upper bound", test_lower_upper_bound);
