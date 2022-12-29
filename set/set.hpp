@@ -4,7 +4,9 @@
 #include <functional>
 #include <memory>
 
+#include "equal.hpp"
 #include "iterator_traits.hpp"
+#include "lexicographical_compare.hpp"
 #include "pair.hpp"
 #include "red_black_tree.hpp"
 
@@ -168,6 +170,37 @@ class set {
   // the set destructor
   ~set() {}
 };
+
+// relational operators for set
+template <class Key, class Compare, class Alloc>
+bool operator==(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <class Key, class Compare, class Alloc>
+bool operator!=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return !(lhs == rhs);
+}
+
+template <class Key, class Compare, class Alloc>
+bool operator<(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+template <class Key, class Compare, class Alloc>
+bool operator<=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return !(rhs < lhs);
+}
+
+template <class Key, class Compare, class Alloc>
+bool operator>(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return rhs < lhs;
+}
+
+template <class Key, class Compare, class Alloc>
+bool operator>=(const set<Key, Compare, Alloc>& lhs, const set<Key, Compare, Alloc>& rhs) {
+  return !(lhs < rhs);
+}
 
 }  // namespace ft
 

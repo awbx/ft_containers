@@ -4,7 +4,9 @@
 #include <functional>
 #include <memory>
 
+#include "equal.hpp"
 #include "iterator_traits.hpp"
+#include "lexicographical_compare.hpp"
 #include "pair.hpp"
 #include "red_black_tree.hpp"
 
@@ -187,6 +189,32 @@ class map<Key, T, Compare, Alloc>::value_compare : public std::binary_function<v
   typedef value_type second_argument_type;
   bool               operator()(const value_type& x, const value_type& y) const { return comp(x.first, y.first); }
 };
+
+// relational operators for map
+template <class Key, class T, class Compare, class Alloc>
+bool operator==(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
+  return lhs.size() == rhs.size() && ft::equal(lhs.begin(), lhs.end(), rhs.begin());
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator!=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
+  return !(lhs == rhs);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator<(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
+  return ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator<=(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
+  return !(rhs < lhs);
+}
+
+template <class Key, class T, class Compare, class Alloc>
+bool operator>(const map<Key, T, Compare, Alloc>& lhs, const map<Key, T, Compare, Alloc>& rhs) {
+  return rhs < lhs;
+}
 
 }  // namespace ft
 
