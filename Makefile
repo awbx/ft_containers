@@ -18,12 +18,14 @@ HEADERS = utils/equal.hpp\
 	red_black_tree/red_black_tree.hpp\
 	red_black_tree/rbt_iterator.hpp\
 	map/map.hpp\
-	set/set.hpp
+	set/set.hpp\
+	tests/tests.hpp
 
 TEST_FILES = tests/tests.cpp\
 	stack/stack_tests.cpp\
 	vector/vector_tests.cpp\
-	map/map_tests.cpp
+	map/map_tests.cpp\
+	set/set_tests.cpp
 
 TEST_OBJS = $(TEST_FILES:%.cpp=%.o)
 

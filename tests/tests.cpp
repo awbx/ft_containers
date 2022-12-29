@@ -10,4 +10,5 @@ int main() {
   stack_main();
   vector_main();
   map_main();
+  set_main();
 }

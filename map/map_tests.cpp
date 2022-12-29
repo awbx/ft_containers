@@ -205,7 +205,7 @@ static void test_clear(void) {
   for (ft::map<char, int>::iterator it = mymap.begin(); it != mymap.end(); ++it) std::cout << it->first << " => " << it->second << '\n';
 }
 
-void test_key_comp(void) {
+static void test_key_comp(void) {
   ft::map<char, int> mymap;
 
   ft::map<char, int>::key_compare mycomp = mymap.key_comp();
@@ -224,7 +224,7 @@ void test_key_comp(void) {
   } while (mycomp((*it++).first, highest));
 }
 
-void test_value_comp(void) {
+static void test_value_comp(void) {
   ft::map<char, int> mymap;
 
   mymap['x'] = 1001;

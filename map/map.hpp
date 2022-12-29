@@ -154,11 +154,7 @@ class map {
     return const_iterator(exists);
   }
 
-  size_type count(const key_type& k) const {
-    typename RBT::pointer exists = tree.find(value_type(k, mapped_type()));
-
-    return !exists->isNil();
-  }
+  size_type count(const key_type& k) const { return this->find(k) != this->end(); }
 
   iterator       lower_bound(const key_type& k) { return tree.lower_bound(value_type(k, mapped_type())); }
   const_iterator lower_bound(const key_type& k) const { return tree.lower_bound(value_type(k, mapped_type())); }
