@@ -2,80 +2,64 @@
 #define __RBT_ITERATOR_HPP__
 
 #include "iterator.hpp"
-#include "red_black_tree.hpp"
 
 namespace ft {
 
 template <typename T>
-class Node;
-
-template <typename T>
-class tree_iterator : public ft::iterator<ft::bidirectional_iterator_tag, T> {
- private:
-  typedef T *ptr;
+class tree_iterator : ft::iterator<ft::bidirectional_iterator_tag, typename T::value_type> {
+  T* node;
 
  public:
-  typedef typename ft::iterator_traits<ptr>::value_type      value_type;
-  typedef typename ft::iterator_traits<ptr>::difference_type difference_type;
-  typedef typename ft::iterator_traits<ptr>::pointer         pointer;
-  typedef typename ft::iterator_traits<ptr>::reference       reference;
-  // Todo: add category type
+  typedef typename T::value_type                                                               value_type;
+  typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category iterator_category;
+  typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::difference_type   difference_type;
+  typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::pointer           pointer;
+  typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::reference         reference;
 
- private:
-  typedef ft::Node<T>        node_type;
-  typedef node_type         *node_pointer;
-  typedef const node_pointer const_node_pointer;
-  node_pointer               tree;
+  tree_iterator() : node(nullptr){};
 
-  // private member functions
-  node_pointer base() const { return this->tree; }
+  tree_iterator(T* _node) : node(_node) {}
 
- public:
-  // member functions
+  tree_iterator(const tree_iterator& copy) : node(copy.node) {}
 
-  tree_iterator() : tree(nullptr) {}
+  virtual ~tree_iterator() {}
 
-  explicit tree_iterator(const_node_pointer root) : tree(root){};
-
-  tree_iterator(tree_iterator const &vector_iter) : tree(vector_iter.base()) {}
-
-  tree_iterator operator=(tree_iterator const &rhs) {
-    if (this != &rhs) {
-      this->tree = rhs.base();
+  tree_iterator& operator=(const tree_iterator& rhs) {
+    if (*this != rhs) {
+      this->node = rhs.node;
     }
-    return *this;
+    return (*this);
   }
 
-  reference operator*() const { return tree->data; }
+  bool operator==(const tree_iterator& rhs) const { return (this->node == rhs.node); }
 
-  tree_iterator &operator++() {
-    this->tree = node_type::getSuccessor(this->tree);
-    return *this;
+  bool operator!=(const tree_iterator& rhs) const { return (this->node != rhs.node); }
+
+  reference operator*() const { return (reference)(this->node->data); }
+
+  pointer operator->() const { return (pointer)(&this->node->data); }
+
+  tree_iterator& operator++(void) {
+    this->node = T::getSuccessor(this->node);
+    return (*this);
   }
 
   tree_iterator operator++(int) {
-    tree_iterator tmp = *this;
+    tree_iterator tmp(*this);
     ++(*this);
-    return tmp;
+    return (tmp);
   }
 
-  tree_iterator &operator--() {
-    this->tree = node_type::getPredecessor(this->tree);
-    return *this;
+  tree_iterator& operator--(void) {
+    this->node = T::getPredecessor(this->node);
+    return (*this);
   }
 
   tree_iterator operator--(int) {
-    tree_iterator tmp = *this;
+    tree_iterator tmp(*this);
     --(*this);
-    return tmp;
+    return (tmp);
   }
-
-  pointer operator->() const { return &this->tree->data; }
-
-  // relational operators
-
-  bool operator==(const tree_iterator &rhs) { return this->base() == rhs.base(); }
-  bool operator!=(const tree_iterator &rhs) { return this->base() != rhs.base(); }
 };
 
 }  // namespace ft

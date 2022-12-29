@@ -24,6 +24,7 @@ class Node {
  public:
   typedef T                 value_type;
   typedef Node<value_type> *pointer;
+  typedef const pointer     const_pointer;
 
   // members;
   T       data;
@@ -34,7 +35,7 @@ class Node {
 
   Node(const T &data, pointer parent = nullptr, bool color = red) : data(data), left(nullptr), right(nullptr), parent(parent), color(color) {}
 
-  static pointer getMinimum(const pointer tree) {
+  static pointer getMinimum(const_pointer tree) {
     pointer min = tree;
 
     while (!min->left->isNil()) {
@@ -43,7 +44,7 @@ class Node {
     return min;
   }
 
-  static pointer getMaximum(const pointer tree) {
+  static pointer getMaximum(const_pointer tree) {
     pointer max = tree;
 
     while (!max->right->isNil()) {
@@ -168,8 +169,8 @@ class RedBlackTree {
   typedef typename node_alloc::const_reference                       const_reference;
   typedef typename node_alloc::pointer                               pointer;
   typedef typename node_alloc::const_pointer                         const_pointer;
-  typedef ft::tree_iterator<value_type>                              iterator;
-  typedef const ft::tree_iterator<value_type>                        const_iterator;
+  typedef ft::tree_iterator<node_type>                               iterator;
+  typedef ft::tree_iterator<node_type>                               const_iterator;
   typedef ft::reverse_iterator<iterator>                             reverse_iterator;
   typedef ft::reverse_iterator<const_iterator>                       const_reverse_iterator;
   typedef typename node_alloc::difference_type                       difference_type;
@@ -208,7 +209,7 @@ class RedBlackTree {
     if (this != &rhs) {
       this->clear();
 
-      iterator it = rhs.begin();
+      const_iterator it = rhs.begin();
       while (it != rhs.end()) {
         this->insert(*it);
         it++;
