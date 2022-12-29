@@ -7,8 +7,12 @@ void start_test(const char *test_name, void (*func)(void)) {
 }
 
 int main() {
-  stack_main();
+  std::cout << "------------------- Start Of vector Tests -------------------\n";
   vector_main();
+  std::cout << "------------------- Start Of stack Tests -------------------\n";
+  stack_main();
+  std::cout << "------------------- Start Of map Tests -------------------\n";
   map_main();
+  std::cout << "------------------- Start Of set Tests -------------------\n";
   set_main();
 }

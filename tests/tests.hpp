@@ -2,7 +2,6 @@
 #define __TESTS_HPP__
 
 #include <deque>     // std::deque
-#include <iomanip>   // std::setw
 #include <iostream>  // std::cout
 #include <map>       // std::map
 #include <stack>     // std::stack
