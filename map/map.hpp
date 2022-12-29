@@ -8,6 +8,8 @@
 #include "pair.hpp"
 #include "red_black_tree.hpp"
 
+// Todo: add virtual destructor !
+
 namespace ft {
 template <class Key,                                         // map::key_type
           class T,                                           // map::mapped_type
@@ -17,6 +19,7 @@ template <class Key,                                         // map::key_type
 class map {
  public:
   // member types
+  class value_compare;
   typedef Key                                                     key_type;
   typedef T                                                       mapped_type;
   typedef ft::pair<const key_type, mapped_type>                   value_type;
@@ -26,17 +29,16 @@ class map {
   typedef typename allocator_type::const_reference                const_reference;
   typedef typename allocator_type::pointer                        pointer;
   typedef typename allocator_type::const_pointer                  const_pointer;
-  typedef ft::tree_iterator<value_type>                           iterator;
-  typedef const ft::tree_iterator<value_type>                     const_iterator;
+  typedef RedBlackTree<value_type, value_compare, allocator_type> RBT;
+  typedef typename RBT::iterator                                  iterator;
+  typedef typename RBT::const_iterator                            const_iterator;
   typedef ft::reverse_iterator<iterator>                          reverse_iterator;
   typedef ft::reverse_iterator<const_iterator>                    const_reverse_iterator;
   typedef typename ft::iterator_traits<iterator>::difference_type difference_type;
   typedef typename allocator_type::size_type                      size_type;
-  class value_compare;
 
  private:
-  typedef RedBlackTree<value_type, value_compare, allocator_type> RBT;
-  RBT                                                             tree;
+  RBT tree;
 
   allocator_type _alloc;
   key_compare    _key_comp;
