@@ -31,9 +31,11 @@ class set {
   typedef RedBlackTree<value_type, value_compare, allocator_type> RBT;
   RBT                                                             tree;
 
-  allocator_type                                   _alloc;
-  key_compare                                      _key_comp;
-  value_compare                                    _value_comp;
+  allocator_type _alloc;
+  key_compare    _key_comp;
+  value_compare  _value_comp;
+
+ public:
   typedef typename RBT::iterator                   iterator;
   typedef typename RBT::const_iterator             const_iterator;
   typedef ft::reverse_iterator<iterator>           reverse_iterator;
