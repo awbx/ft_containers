@@ -6,6 +6,7 @@
 #include <map>       // std::map
 #include <stack>     // std::stack
 #include <vector>    // std::vector
+#include <set>
 
 #if STD
 namespace ft = std;
