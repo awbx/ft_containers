@@ -10,6 +10,8 @@
 
 using namespace std;
 
+#include <iostream>
+
 #include "pair.hpp"
 #include "rbt_iterator.hpp"
 #include "reverse_iterator.hpp"
@@ -322,21 +324,55 @@ class RedBlackTree {
     return z;
   }
 
+  // This algorithm is used for maintaining the property of a red-black tree if the insertion of a newNode violates this property.
+
+  // Do the following while the parent of newNode p is RED.
+  // If p is the left child of grandParent gP of z, do the following.
+  // Case-I:
+  // If the color of the right child of gP of z is RED, set the color of both the children of gP as BLACK and the color of gP as RED.
+  // Assign gP to newNode.
+  // Case-II:
+  // Else if newNode is the right child of p then, assign p to newNode.
+  // Left-Rotate newNode.
+  // Case-III:
+  // Set color of p as BLACK and color of gP as RED.
+  // Right-Rotate gP.
+  // Else, do the following.
+  // If the color of the left child of gP of z is RED, set the color of both the children of gP as BLACK and the color of gP as RED.
+  // Assign gP to newNode.
+  // Else if newNode is the left child of p then, assign p to newNode and Right-Rotate newNode.
+  // Set color of p as BLACK and color of gP as RED.
+  // Left-Rotate gP.
+  // Set the root of the tree as BLACK.
+
   void insertFixUp(pointer x) {
     pointer w;
     while (x != this->_root && x->parent->isRed()) {
       short side = x->getParent()->isRightChild() ? RIGHT_SIDE : LEFT_SIDE;
       w = x->getUncle();
       if (w->isRed()) {
+        // case 1 : uncle is red
+        // set w to black
+        // recolor x parent to black
+        // recolor x grandparent to red
+        // set x to x grandparent
         w->color = black;
         x->parent->color = black;
         x->getGrandParent()->color = red;
         x = x->getGrandParent();
       } else {
         if (x == x->parent->getSide(!side)) {
+          // case 2 : uncle is black and x is on the other side of its parent
+          // set x to x parent
+          // rotate x to the same side as x parent
           x = x->parent;
           this->rotate(x, side);
         }
+
+        // case 3 : uncle is black
+        // recolor x parent to black
+        // recolor x grandparent to red
+        // rotate x grandparent to the other side
         x->parent->color = black;
         x->getGrandParent()->color = red;
         this->rotate(x->getGrandParent(), !side);
@@ -403,6 +439,49 @@ class RedBlackTree {
     this->set_end();
     return true;
   }
+
+  // This algorithm is implemented when a black node is deleted because it violates the black depth property of the red-black tree.
+
+  // This violation is corrected by assuming that node x (which is occupying y's original position) has an extra black.
+  // This makes node x neither red nor black. It is either doubly black or black-and-red. This violates the red-black properties.
+
+  // However, the color attribute of x is not changed rather the extra black is represented in x's pointing to the node.
+
+  // The extra black can be removed if
+
+  // It reaches the root node.
+  // If x points to a red-black node. In this case, x is colored black.
+  // Suitable rotations and recoloring are performed.
+  // The following algorithm retains the properties of a red-black tree.
+
+  // Do the following until the x is not the root of the tree and the color of x is BLACK
+  // If x is the left child of its parent then,
+  // Assign w to the sibling of x.
+  // If the right child of parent of x is RED,
+  // Case-I:
+  // Set the color of the right child of the parent of x as BLACK.
+  // Set the color of the parent of x as RED.
+  // Left-Rotate the parent of x.
+  // Assign the rightChild of the parent of x to w.
+  // If the color of both the right and the leftChild of w is BLACK,
+  // Case-II:
+  // Set the color of w as RED
+  // Assign the parent of x to x.
+  // Else if the color of the rightChild of w is BLACK
+  // Case-III:
+  // Set the color of the leftChild of w as BLACK
+  // Set the color of w as RED
+  // Right-Rotate w.
+  // Assign the rightChild of the parent of x to w.
+  // If any of the above cases do not occur, then do the following.
+  // Case-IV:
+  // Set the color of w as the color of the parent of x.
+  // Set the color of the parent of x as BLACK.
+  // Set the color of the right child of w as BLACK.
+  // Left-Rotate the parent of x.
+  // Set x as the root of the tree.
+  // Else the same as above with right changed to left and vice versa.
+  // Set the color of x as BLACK.
 
   void deleteFixUp(pointer x) {
     pointer w;
@@ -545,7 +624,7 @@ class RedBlackTree {
     return const_iterator(iter);
   }
 
-  void test(void) const { node_type::dump_dot(this->_root, cout); }
+  void test(ostream &stream) const { node_type::dump_dot(this->_root, stream); }
 };
 }  // namespace ft
 

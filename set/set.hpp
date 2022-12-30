@@ -165,7 +165,7 @@ class set {
   // Allocator
   allocator_type get_allocator() const { return this->_alloc; }
 
-  // void test(void) const { tree.test(); }  // dump the tree
+  // void test(ostream& stream) const { tree.test(stream); }  // dump the tree
 
   // the set destructor
   ~set() {}
